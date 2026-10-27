@@ -584,13 +584,13 @@ footer {
         padding: 2rem 1.5rem; /* Menos padding na caixa de contato */
     }
 
-    .skills-tabs-container, .tabs-container {
+    .tabs-container {
         flex-wrap: wrap; /* Permite que os botões da aba quebrem a linha */
         gap: 0.5rem;
         padding: 0.5rem;
     }
 
-    .skill-tab-link, .tab-link {
+    .tab-link {
         font-size: 0.9rem; /* Diminui a fonte das abas */
         padding: 0.5rem 1rem;
     }
