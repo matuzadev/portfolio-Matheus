@@ -238,3 +238,14 @@ document.addEventListener("DOMContentLoaded", function() {
         setTimeout(next, 1000);
     }
 });
+
+document.addEventListener("DOMContentLoaded", function() {
+    const visitorBadge = document.querySelector(".visitor-counter img");
+    const badgeSource = visitorBadge?.dataset.src;
+
+    if (badgeSource) {
+        const badgeUrl = new URL(badgeSource);
+        badgeUrl.searchParams.set("cache", Date.now().toString());
+        visitorBadge.src = badgeUrl.toString();
+    }
+});

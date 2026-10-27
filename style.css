@@ -876,6 +876,39 @@ body {
     color: transparent !important;
 }
 
+.visitor-counter {
+    position: fixed;
+    bottom: 1rem;
+    left: 1rem;
+    z-index: 999;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.65rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 999px;
+    background: rgba(23, 28, 24, 0.88);
+    color: var(--secondary-text-color);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+    backdrop-filter: blur(8px);
+    opacity: 0.8;
+    transition: opacity 180ms ease;
+}
+
+.visitor-counter:hover {
+    opacity: 1;
+}
+
+.visitor-counter i {
+    color: var(--accent-color);
+    font-size: 0.8rem;
+}
+
+.visitor-counter img {
+    display: block;
+    height: 20px;
+}
+
 /* --- REFINAMENTO VISUAL --- */
 :root {
     --bg-color: #101310;
