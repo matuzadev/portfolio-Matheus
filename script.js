@@ -219,6 +219,202 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 document.addEventListener("DOMContentLoaded", function() {
+    const constellation = document.querySelector(".skills-constellation");
+    const svg = constellation?.querySelector(".constellation-lines");
+    const edgeLayer = svg?.querySelector(".constellation-edge-layer");
+    const particleLayer = svg?.querySelector(".constellation-particle-layer");
+    const nodeElements = Array.from(constellation?.querySelectorAll(".constellation-node") || []);
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    if (constellation && svg && edgeLayer && particleLayer && nodeElements.length && !prefersReducedMotion.matches) {
+        const svgNamespace = "http://www.w3.org/2000/svg";
+        const nodes = nodeElements.map((element, index) => ({
+            element,
+            index,
+            x: parseFloat(element.style.getPropertyValue("--x")) * 10,
+            y: parseFloat(element.style.getPropertyValue("--y")) * 5.2,
+            offsetX: 0,
+            offsetY: 0,
+            velocityX: 0,
+            velocityY: 0,
+            influence: 0
+        }));
+        const edges = [];
+        const connectedPairs = new Set();
+        const particles = [];
+        const pointer = { x: 0, y: 0, active: false };
+        let frameId = 0;
+        let animationStart = 0;
+        let isVisible = true;
+
+        nodes.forEach((node, index) => {
+            const nearestNodes = nodes
+                .filter(candidate => candidate !== node)
+                .map(candidate => ({
+                    candidate,
+                    distance: Math.hypot(candidate.x - node.x, candidate.y - node.y)
+                }))
+                .sort((first, second) => first.distance - second.distance)
+                .slice(0, 2);
+
+            nearestNodes.forEach(({ candidate }) => {
+                const startIndex = Math.min(index, candidate.index);
+                const endIndex = Math.max(index, candidate.index);
+                const key = `${startIndex}-${endIndex}`;
+
+                if (!connectedPairs.has(key)) {
+                    connectedPairs.add(key);
+                    const path = document.createElementNS(svgNamespace, "path");
+                    edgeLayer.appendChild(path);
+                    edges.push({ start: nodes[startIndex], end: nodes[endIndex], path });
+                }
+            });
+        });
+
+        edges.slice(0, 10).forEach((edge, index) => {
+            const particle = document.createElementNS(svgNamespace, "circle");
+            particle.setAttribute("r", index % 3 === 0 ? "2.3" : "1.7");
+            particleLayer.appendChild(particle);
+            particles.push({ edge, element: particle, phase: index / particles.length });
+        });
+
+        const distanceToSegment = (pointX, pointY, start, end) => {
+            const deltaX = end.x - start.x;
+            const deltaY = end.y - start.y;
+            const lengthSquared = deltaX * deltaX + deltaY * deltaY;
+            const projection = lengthSquared
+                ? Math.max(0, Math.min(1, ((pointX - start.x) * deltaX + (pointY - start.y) * deltaY) / lengthSquared))
+                : 0;
+            return Math.hypot(pointX - (start.x + projection * deltaX), pointY - (start.y + projection * deltaY));
+        };
+
+        const render = timestamp => {
+            frameId = 0;
+            if (!isVisible) return;
+
+            if (!animationStart) animationStart = timestamp;
+            const elapsed = timestamp - animationStart;
+            const bounds = constellation.getBoundingClientRect();
+            const pointerX = (pointer.x / bounds.width) * 1000;
+            const pointerY = (pointer.y / bounds.height) * 520;
+            const influenceRadius = 165;
+            let hasMotion = false;
+
+            nodes.forEach(node => {
+                const baseX = parseFloat(node.element.style.getPropertyValue("--x")) * 10;
+                const baseY = parseFloat(node.element.style.getPropertyValue("--y")) * 5.2;
+                const currentX = baseX + node.offsetX;
+                const currentY = baseY + node.offsetY;
+                const deltaX = currentX - pointerX;
+                const deltaY = currentY - pointerY;
+                const distance = Math.hypot(deltaX, deltaY);
+                const falloff = pointer.active && distance < influenceRadius
+                    ? Math.pow(1 - distance / influenceRadius, 2)
+                    : 0;
+                const repel = distance ? (falloff * 24) / distance : 0;
+                const targetX = pointer.active ? deltaX * repel : 0;
+                const targetY = pointer.active ? deltaY * repel : 0;
+
+                node.velocityX = (node.velocityX + (targetX - node.offsetX) * 0.12) * 0.78;
+                node.velocityY = (node.velocityY + (targetY - node.offsetY) * 0.12) * 0.78;
+                node.offsetX += node.velocityX;
+                node.offsetY += node.velocityY;
+                node.x = baseX + node.offsetX;
+                node.y = baseY + node.offsetY;
+                node.influence = falloff;
+
+                node.element.style.setProperty("--motion-x", `${(node.offsetX * bounds.width) / 1000}px`);
+                node.element.style.setProperty("--motion-y", `${(node.offsetY * bounds.height) / 520}px`);
+                node.element.style.setProperty("--motion-scale", (1 + falloff * 0.1).toFixed(3));
+                node.element.classList.toggle("is-active", falloff > 0.18);
+
+                if (Math.abs(node.offsetX) + Math.abs(node.offsetY) > 0.08
+                    || Math.abs(node.velocityX) + Math.abs(node.velocityY) > 0.08) {
+                    hasMotion = true;
+                }
+            });
+
+            edges.forEach(({ start, end, path }) => {
+                path.setAttribute("d", `M${start.x} ${start.y} L${end.x} ${end.y}`);
+
+                const edgeDistance = pointer.active
+                    ? distanceToSegment(pointerX, pointerY, start, end)
+                    : Infinity;
+                const edgeInfluence = Math.max(0, 1 - edgeDistance / 95);
+                path.style.strokeOpacity = (0.18 + edgeInfluence * 0.75).toFixed(3);
+                path.style.strokeWidth = (1 + edgeInfluence * 1.5).toFixed(2);
+                path.style.stroke = edgeInfluence > 0.08 ? "#9af3a1" : "";
+                path.style.strokeDasharray = edgeInfluence > 0.08 ? "3 7" : "";
+                path.style.strokeDashoffset = edgeInfluence > 0.08 ? `${-(elapsed * 0.018) % 10}` : "0";
+
+                if (edgeInfluence > 0.08) hasMotion = true;
+            });
+
+            particles.forEach(({ edge, element, phase }) => {
+                const progress = (elapsed * 0.00007 + phase) % 1;
+                const particleX = edge.start.x + (edge.end.x - edge.start.x) * progress;
+                const particleY = edge.start.y + (edge.end.y - edge.start.y) * progress;
+                const distance = pointer.active ? Math.hypot(pointerX - particleX, pointerY - particleY) : Infinity;
+                const opacity = pointer.active ? Math.max(0.08, 1 - distance / 190) : 0;
+
+                element.setAttribute("cx", particleX.toFixed(2));
+                element.setAttribute("cy", particleY.toFixed(2));
+                element.style.opacity = opacity.toFixed(2);
+            });
+
+            if (pointer.active || hasMotion) {
+                frameId = requestAnimationFrame(render);
+            } else {
+                nodes.forEach(node => {
+                    node.element.classList.remove("is-active");
+                    node.element.style.setProperty("--motion-scale", "1");
+                });
+                edges.forEach(({ path }) => {
+                    path.style.strokeOpacity = "0.18";
+                    path.style.strokeWidth = "1";
+                    path.style.stroke = "";
+                    path.style.strokeDasharray = "";
+                    path.style.strokeDashoffset = "0";
+                });
+            }
+        };
+
+        const scheduleRender = () => {
+            if (!frameId && isVisible) frameId = requestAnimationFrame(render);
+        };
+
+        constellation.addEventListener("pointerenter", event => {
+            if (event.pointerType === "touch") return;
+            pointer.active = true;
+            scheduleRender();
+        });
+
+        constellation.addEventListener("pointermove", event => {
+            if (event.pointerType === "touch") return;
+            const bounds = constellation.getBoundingClientRect();
+            pointer.x = event.clientX - bounds.left;
+            pointer.y = event.clientY - bounds.top;
+            pointer.active = true;
+            scheduleRender();
+        });
+
+        constellation.addEventListener("pointerleave", () => {
+            pointer.active = false;
+            scheduleRender();
+        });
+
+        document.addEventListener("visibilitychange", () => {
+            isVisible = !document.hidden;
+            if (isVisible && pointer.active) scheduleRender();
+            if (!isVisible && frameId) {
+                cancelAnimationFrame(frameId);
+                frameId = 0;
+            }
+        });
+
+        window.addEventListener("resize", scheduleRender, { passive: true });
+    }
+
     const visitorBadge = document.querySelector(".visitor-counter img");
     const badgeSource = visitorBadge?.dataset.src;
 

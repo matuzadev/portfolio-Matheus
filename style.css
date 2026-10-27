@@ -1281,6 +1281,17 @@ section h2 {
     vector-effect: non-scaling-stroke;
 }
 
+.constellation-edge-layer path {
+    stroke-linecap: round;
+    transition: stroke 160ms ease;
+}
+
+.constellation-particle-layer circle {
+    fill: #b6ffbd;
+    filter: drop-shadow(0 0 4px rgba(126, 231, 135, 0.95));
+    pointer-events: none;
+}
+
 .constellation-label {
     position: absolute;
     z-index: 1;
@@ -1331,7 +1342,8 @@ section h2 {
     line-height: 1.2;
     text-align: center;
     white-space: nowrap;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) translate3d(var(--motion-x, 0px), var(--motion-y, 0px), 0) scale(var(--motion-scale, 1));
+    will-change: transform;
 }
 
 .skill-node-icon {
@@ -1356,6 +1368,11 @@ section h2 {
 
 .constellation-node:hover {
     color: #f0fff1;
+}
+
+.constellation-node.is-active .skill-node-icon {
+    border-color: rgba(190, 255, 195, 0.95);
+    box-shadow: 0 0 30px rgba(126, 231, 135, 0.55), inset 0 0 16px rgba(126, 231, 135, 0.18);
 }
 
 .constellation-star {
