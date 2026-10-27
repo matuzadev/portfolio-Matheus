@@ -226,7 +226,10 @@ document.addEventListener("DOMContentLoaded", function() {
     const nodeElements = Array.from(constellation?.querySelectorAll(".constellation-node") || []);
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-    if (constellation && svg && edgeLayer && particleLayer && nodeElements.length && !prefersReducedMotion.matches) {
+    const supportsConstellationInteraction = window.matchMedia("(min-width: 769px) and (hover: hover) and (pointer: fine)").matches;
+
+    if (constellation && svg && edgeLayer && particleLayer && nodeElements.length
+        && !prefersReducedMotion.matches && supportsConstellationInteraction) {
         const svgNamespace = "http://www.w3.org/2000/svg";
         const nodes = nodeElements.map((element, index) => ({
             element,
@@ -271,11 +274,12 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         });
 
-        edges.slice(0, 10).forEach((edge, index) => {
+        const particleEdges = edges.slice(0, 10);
+        particleEdges.forEach((edge, index) => {
             const particle = document.createElementNS(svgNamespace, "circle");
             particle.setAttribute("r", index % 3 === 0 ? "2.3" : "1.7");
             particleLayer.appendChild(particle);
-            particles.push({ edge, element: particle, phase: index / particles.length });
+            particles.push({ edge, element: particle, phase: index / particleEdges.length });
         });
 
         const distanceToSegment = (pointX, pointY, start, end) => {
@@ -405,11 +409,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
         document.addEventListener("visibilitychange", () => {
             isVisible = !document.hidden;
-            if (isVisible && pointer.active) scheduleRender();
             if (!isVisible && frameId) {
+                pointer.active = false;
                 cancelAnimationFrame(frameId);
                 frameId = 0;
             }
+            if (isVisible) scheduleRender();
         });
 
         window.addEventListener("resize", scheduleRender, { passive: true });
