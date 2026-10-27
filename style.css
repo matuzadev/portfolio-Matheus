@@ -155,32 +155,6 @@ section .subtitle {
     font-weight: 600;
 }
 
-/* --- SEÇÃO DE HABILIDADES --- */
-.skills-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 1rem;
-}
-
-.skills-list span {
-    background-color: var(--card-bg-color);
-    padding: 0.7rem 1.3rem; /* Aumentado para mais espaço */
-    border-radius: 25px;   /* Aumentado para manter a forma arredondada */
-    font-size: 1rem;       /* Aumentado para texto e ícone maiores */
-    font-weight: 300;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;           /* Aumentado para mais espaço entre ícone e texto */
-    transition: transform 0.2s ease;
-}
-
-.skills-list span:hover {
-    transform: translateY(-3px);
-}
-
-
-
 /* --- SECÇÃO DE CONTATO ATUALIZADA --- */
 #contato {
     background-color: #1a1a1a; /* Fundo ligeiramente diferente para destacar o cartão */
@@ -348,30 +322,6 @@ footer {
     width: 100%;
     height: auto;
     display: block;
-}
-
-
-/* CORES DA HABILIDADES
-
-
-/* Cor para o 1º, 5º, 9º... balão de cada lista */
-.skills-list span:nth-child(4n + 1) {
-    background-color: #086436; /* Roxo */
-}
-
-/* Cor para o 2º, 6º, 10º... balão de cada lista */
-.skills-list span:nth-child(4n + 2) {
-    background-color: #0a5717; /* Azul */
-}
-
-/* Cor para o 3º, 7º, 11º... balão de cada lista */
-.skills-list span:nth-child(4n + 3) {
-    background-color: #0f6d36; /* Azul Escuro */
-}
-
-/* Cor para o 4º, 8º, 12º... balão de cada lista */
-.skills-list span:nth-child(4n + 4) {
-    background-color: #0c5719; /* Verde */
 }
 
 
@@ -1320,55 +1270,128 @@ section h2 {
     background: #2a312b;
 }
 
-.skills-tabs-container {
-    justify-content: flex-start;
-    max-width: none;
-    margin-bottom: 2rem;
-    padding: 0;
-    border: 0;
-    background: transparent;
+#habilidades .skills-intro {
+    max-width: 620px;
+    margin: -1.5rem 0 2rem;
+    color: var(--secondary-text-color);
+    font-size: 0.96rem;
 }
 
-.skill-tab-link {
-    border: 1px solid rgba(126, 231, 135, 0.2);
+#habilidades .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+}
+
+#habilidades .skills-category {
+    position: relative;
+    overflow: hidden;
+    min-width: 0;
+    margin: 0;
+    padding: clamp(1.25rem, 3vw, 1.75rem);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    background:
+        radial-gradient(ellipse at 100% 0, rgba(126, 231, 135, 0.06), transparent 38%),
+        linear-gradient(145deg, #171c18, #141815);
+    transition: border-color 200ms ease, transform 200ms ease, box-shadow 200ms ease;
+}
+
+#habilidades .skills-category:hover {
+    transform: translateY(-3px);
+    border-color: rgba(126, 231, 135, 0.24);
+    box-shadow: 0 16px 38px rgba(0, 0, 0, 0.16);
+}
+
+.skills-category-header {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 0.9rem;
+}
+
+.skills-category-icon {
+    display: grid;
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    place-items: center;
+    border: 1px solid rgba(126, 231, 135, 0.18);
+    border-radius: 12px;
     background: rgba(126, 231, 135, 0.08);
     color: var(--accent-color);
 }
 
-.skill-tab-link.active {
-    background: var(--accent-color);
-    color: #101610;
+.skills-category-label {
+    margin: 0 0 0.12rem;
+    color: #879189;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.13em;
 }
 
-.skills-category {
-    padding: 1.5rem;
+#habilidades .skills-category h3 {
+    margin: 0;
+    color: var(--primary-text-color);
+    font-size: 1.13rem;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+}
+
+.skills-category-count {
+    margin-left: auto;
+    padding: 0.28rem 0.55rem;
     border: 1px solid rgba(255, 255, 255, 0.07);
-    border-radius: 14px;
-    background: var(--card-bg-color);
+    border-radius: 999px;
+    color: #a3aba4;
+    font-size: 0.68rem;
+    white-space: nowrap;
 }
 
-.skills-category h4 {
-    margin-bottom: 1.1rem;
-    text-align: left;
+#habilidades .skills-category-description {
+    margin: 1rem 0 1.1rem;
+    color: #929b93;
+    font-size: 0.82rem;
+    line-height: 1.6;
 }
 
-.skills-list {
+#habilidades .skills-list {
+    display: flex;
+    flex-wrap: wrap;
     justify-content: flex-start;
-    gap: 0.6rem;
+    gap: 0.55rem;
 }
 
-.skills-list span,
-.skills-list span:nth-child(n) {
-    padding: 0.5rem 0.8rem;
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    border-radius: 8px;
-    background: #1e251f;
+#habilidades .skill-chip {
+    display: inline-flex;
+    min-height: 40px;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.075);
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.035);
     color: #cbd3cc;
-    font-size: 0.83rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    line-height: 1.25;
+    transition: transform 160ms ease, border-color 160ms ease, background-color 160ms ease, color 160ms ease;
 }
 
-.skills-list span:hover {
-    border-color: rgba(126, 231, 135, 0.35);
+#habilidades .skill-chip i {
+    color: #a8b2a9;
+    font-size: 0.95rem;
+    transition: color 160ms ease;
+}
+
+#habilidades .skill-chip:hover {
+    transform: translateY(-2px);
+    border-color: rgba(126, 231, 135, 0.32);
+    background: rgba(126, 231, 135, 0.07);
+    color: #eff8ef;
+}
+
+#habilidades .skill-chip:hover i {
     color: var(--accent-color);
 }
 
@@ -1566,6 +1589,10 @@ button:focus-visible {
     .contact-box {
         padding: 2rem 1.25rem;
     }
+
+    #habilidades .skills-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media (max-width: 480px) {
@@ -1601,10 +1628,14 @@ button:focus-visible {
         text-align: left;
     }
 
-    .skills-list span,
-    .skills-list span:nth-child(n) {
-        padding: 0.45rem 0.65rem;
-        font-size: 0.78rem;
+    #habilidades .skills-category {
+        padding: 1.1rem;
+    }
+
+    #habilidades .skill-chip {
+        min-height: 38px;
+        padding: 0.45rem 0.6rem;
+        font-size: 0.76rem;
     }
 
     footer .container {
