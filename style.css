@@ -758,39 +758,6 @@ body {
     color: transparent !important;
 }
 
-.visitor-counter {
-    position: fixed;
-    bottom: 1rem;
-    left: 1rem;
-    z-index: 999;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.4rem 0.65rem;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 999px;
-    background: rgba(23, 28, 24, 0.88);
-    color: var(--secondary-text-color);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
-    backdrop-filter: blur(8px);
-    opacity: 0.8;
-    transition: opacity 180ms ease;
-}
-
-.visitor-counter:hover {
-    opacity: 1;
-}
-
-.visitor-counter i {
-    color: var(--accent-color);
-    font-size: 0.8rem;
-}
-
-.visitor-counter img {
-    display: block;
-    height: 20px;
-}
-
 /* --- REFINAMENTO VISUAL --- */
 :root {
     --bg-color: #101310;
@@ -917,7 +884,7 @@ section h2 {
 
 .about-content {
     display: grid;
-    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
     align-items: center;
     gap: clamp(2.5rem, 7vw, 6.5rem);
 }
@@ -939,7 +906,7 @@ section h2 {
 #sobre h1 {
     max-width: 620px;
     margin-bottom: 0;
-    font-size: clamp(3.2rem, 6.6vw, 5.6rem);
+    font-size: clamp(3.2rem, 5.6vw, 5rem);
     font-weight: 700;
     line-height: 0.99;
     letter-spacing: -0.075em;
@@ -1018,7 +985,7 @@ section h2 {
     letter-spacing: 0.12em;
 }
 
-.hero-feature video {
+.hero-feature img {
     display: block;
     width: 100%;
     aspect-ratio: 1.42;
@@ -1660,8 +1627,8 @@ button:focus-visible {
     }
 
     .translation-icons a {
-        width: 25px;
-        height: 25px;
+        min-width: 27px;
+        height: 27px;
     }
 
     .hero-actions {
