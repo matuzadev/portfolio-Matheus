@@ -932,7 +932,6 @@ section h2 {
 
 .hero-eyebrow span {
     padding: 0 0.35rem;
-    background: var(--accent-color);
     background: none;
     color: var(--accent-color);
 }
@@ -1580,20 +1579,17 @@ button:focus-visible {
     }
 
     #sobre {
-        padding: 4.5rem 0 2.5rem;
+        min-height: auto;
+        padding: 4.5rem 0 3rem;
     }
 
     .about-content {
         grid-template-columns: 1fr;
-        gap: 2rem;
+        gap: 2.75rem;
     }
 
-    .hero-note {
-        max-width: 520px;
-    }
-
-    .scroll-cue {
-        margin-top: 2rem;
+    .hero-feature {
+        max-width: 620px;
     }
 
     .contact-box {
