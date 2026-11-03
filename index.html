@@ -69,25 +69,17 @@
 
             <nav class="nav-desktop" aria-label="Navegação principal">
                 <ul>
-                    <li><a href="#sobre">Sobre</a></li>
                     <li><a href="#projetos">Projetos</a></li>
+                    <li><a href="#sobre">Sobre</a></li>
                     <li><a href="#formacao">Formação</a></li>
-                    <li><a href="#habilidades">Habilidades</a></li>
                     <li><a href="#contato">Contato</a></li>
-                    <li><a href="#servicos">Serviços</a></li>
                 </ul>
             </nav>
 
             <div class="translation-icons" aria-label="Selecionar idioma">
-                <a href="#" onclick="translatePage('pt'); return false;" title="Português" aria-label="Português">
-                    <img src="https://flagcdn.com/w40/br.png" alt="">
-                </a>
-                <a href="#" onclick="translatePage('en'); return false;" title="English" aria-label="English">
-                    <img src="https://flagcdn.com/w40/us.png" alt="">
-                </a>
-                <a href="#" onclick="translatePage('es'); return false;" title="Español" aria-label="Español">
-                    <img src="https://flagcdn.com/w40/es.png" alt="">
-                </a>
+                <a href="#" onclick="translatePage('pt'); return false;" lang="pt-BR" title="Português" aria-label="Português">PT</a>
+                <a href="#" onclick="translatePage('en'); return false;" lang="en" title="English" aria-label="English">EN</a>
+                <a href="#" onclick="translatePage('es'); return false;" lang="es" title="Español" aria-label="Español">ES</a>
             </div>
 
             <button id="menu-btn" class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-nav">
@@ -96,8 +88,8 @@
         </div>
 
         <nav id="mobile-nav" class="nav-mobile" aria-label="Navegação móvel">
-            <a href="#sobre" class="mobile-link">Sobre</a>
             <a href="#projetos" class="mobile-link">Projetos</a>
+            <a href="#sobre" class="mobile-link">Sobre</a>
             <a href="#formacao" class="mobile-link">Formação</a>
             <a href="#habilidades" class="mobile-link">Habilidades</a>
             <a href="#servicos" class="mobile-link">Serviços</a>
@@ -111,22 +103,29 @@
         <div class="container">
             <div class="about-content">
                 <div class="hero-copy">
-                    <p class="hero-eyebrow"><span></span> PORTFÓLIO • 2026</p>
-                    <h1>Olá, eu sou <span>Matheus Henrique</span></h1>
-                    <p class="hero-role">Desenvolvedor Full Stack</p>
-                    <p class="hero-description">Transformo ideias em experiências digitais funcionais, combinando desenvolvimento web, interfaces intuitivas e atenção a cada detalhe.</p>
+                    <p class="hero-eyebrow">MATHEUS HENRIQUE <span>/</span> DESENVOLVEDOR FULL STACK</p>
+                    <h1>Do conceito<br>ao <span>código.</span></h1>
+                    <p class="hero-description">Desenvolvo aplicações web e sistemas com foco em interfaces claras, desempenho e código bem estruturado.</p>
                     <div class="hero-actions">
-                        <a href="#projetos" class="cta-button">Conheça meus projetos <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
-                        <a href="#contato" class="hero-contact-link">Vamos conversar</a>
+                        <a href="#projetos" class="cta-button">Explorar projetos <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+                        <a href="#contato" class="hero-contact-link">Entrar em contato</a>
                     </div>
                 </div>
-                <div class="hero-note">
-                    <span class="hero-note-icon"><i class="fa-solid fa-terminal" aria-hidden="true"></i></span>
-                    <p>Curiosidade, criatividade e código para criar soluções que fazem a diferença.</p>
-                    <span class="hero-note-caption">DESENVOLVIMENTO COM PROPÓSITO</span>
+                <a class="hero-feature" href="https://hacking-etico.netlify.app/" target="_blank" rel="noopener noreferrer" aria-label="Conheça o projeto Hacking Ético">
+                    <div class="hero-feature-heading">
+                        <span>PROJETO EM DESTAQUE</span>
+                        <span>01 / 02</span>
+                    </div>
+                    <video autoplay loop muted playsinline preload="metadata" aria-hidden="true" tabindex="-1" src="midia/hacking-etico.mp4"></video>
+                    <div class="hero-feature-caption">
+                        <div>
+                            <h2>Hacking Ético</h2>
+                            <p>Interface web <span>·</span> HTML, CSS e JavaScript</p>
+                        </div>
+                        <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+                    </div>
                 </div>
             </div>
-            <a href="#projetos" class="scroll-cue"><span></span> Role para explorar</a>
         </div>
     </section>
 
