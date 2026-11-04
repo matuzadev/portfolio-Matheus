@@ -325,45 +325,6 @@ footer {
 }
 
 
-/* --- ESTILOS PARA AS ABAS DE PROJETOS --- */
-.tabs-container {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin-bottom: 2.5rem;
-}
-
-.tab-link {
-    background: none;
-    border: none;
-    border-bottom: 3px solid transparent;
-    color: var(--secondary-text-color);
-    padding: 0.5rem 1rem;
-    cursor: pointer;
-    font-size: 1.1rem;
-    font-family: var(--font-family);
-    font-weight: 600;
-    transition: color 0.3s ease, border-color 0.3s ease;
-}
-
-.tab-link:hover {
-    color: var(--primary-text-color);
-}
-
-.tab-link.active {
-    color: var(--accent-color);
-    border-color: var(--accent-color);
-}
-
-.tab-content {
-    display: none;
-    animation: fadeIn 0.6s;
-}
-
-.tab-content.active {
-    display: block;
-}
-
 /* --- AJUSTE NOS CARDS DE PROJETO (OPCIONAL, MAS RECOMENDADO) --- */
 .project-card img,
 .project-card video {
@@ -584,16 +545,6 @@ footer {
         padding: 2rem 1.5rem; /* Menos padding na caixa de contato */
     }
 
-    .tabs-container {
-        flex-wrap: wrap; /* Permite que os botões da aba quebrem a linha */
-        gap: 0.5rem;
-        padding: 0.5rem;
-    }
-
-    .tab-link {
-        font-size: 0.9rem; /* Diminui a fonte das abas */
-        padding: 0.5rem 1rem;
-    }
 }
 
 /* --- ESTILOS DO BOTÃO "VER DETALHES" --- */
@@ -975,24 +926,6 @@ section h2 {
     background: rgba(255, 255, 255, 0.018);
 }
 
-.tabs-container {
-    justify-content: flex-start;
-    gap: 0.5rem;
-    margin-bottom: 2rem;
-}
-
-.tab-link {
-    padding: 0.65rem 0.95rem;
-    border: 1px solid transparent;
-    border-radius: 8px;
-    font-size: 0.9rem;
-}
-
-.tab-link.active {
-    border-color: rgba(242, 193, 78, 0.2);
-    background: rgba(242, 193, 78, 0.08);
-}
-
 .projects-grid {
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
     gap: 1.25rem;
@@ -1021,34 +954,6 @@ section h2 {
 .project-card video {
     height: 230px;
     background: #0c111a;
-}
-
-.project-art {
-    display: flex;
-    height: 230px;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 0.75rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    color: var(--accent-color);
-}
-
-.project-art-c {
-    background:
-        radial-gradient(circle at 50% 40%, rgba(242, 193, 78, 0.12), transparent 35%),
-        linear-gradient(145deg, #151d29, #0c111a);
-}
-
-.project-art-c i {
-    font-size: 4.25rem;
-}
-
-.project-art-c span {
-    color: #a3aba4;
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.18em;
 }
 
 .project-card h3,
@@ -1571,15 +1476,6 @@ button:focus-visible {
         gap: 1rem;
     }
 
-    .tabs-container {
-        align-items: stretch;
-        flex-direction: column;
-    }
-
-    .tab-link {
-        text-align: left;
-    }
-
     .skills-constellation {
         padding: 0.85rem;
     }
@@ -1738,10 +1634,6 @@ section h2 {
     margin-bottom: 2rem;
     color: var(--secondary-text-color);
     font-size: 0.94rem;
-}
-
-#projetos .tabs-container {
-    margin-top: 2.5rem;
 }
 
 #contato .section-kicker {

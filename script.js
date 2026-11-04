@@ -1,30 +1,3 @@
-// --- CONTROLO DAS ABAS DE PROJECTOS ---
-function openTab(evt, tabName) {
-    const tabContents = document.querySelectorAll("#projetos .tab-content");
-    tabContents.forEach(content => {
-        content.classList.remove('active');
-    });
-
-    const tabLinks = document.querySelectorAll("#projetos .tab-link");
-    tabLinks.forEach(link => {
-        link.classList.remove('active');
-    });
-
-    document.getElementById(tabName).classList.add('active');
-    evt.currentTarget.classList.add('active');
-}
-
-// --- CONFIGURAÇÃO INICIAL AO CARREGAR A PÁGINA ---
-document.addEventListener("DOMContentLoaded", function() {
-    // Garante que a primeira aba de projectos esteja activa
-    const webTab = document.getElementById("web");
-    if (webTab) {
-        webTab.classList.add('active');
-    }
-
-});
-
-
 // --- CONTROLE DO MENU HAMBÚRGUER ---
 document.addEventListener("DOMContentLoaded", function() {
     const menuBtn = document.getElementById('menu-btn');
@@ -303,7 +276,7 @@ document.addEventListener("DOMContentLoaded", function() {
             cursor.classList.toggle(
                 "is-hovering",
                 event.target instanceof Element
-                    && Boolean(event.target.closest("a, button, .constellation-node, .tab-link"))
+                    && Boolean(event.target.closest("a, button, .constellation-node"))
             );
             if (!cursorFrame) cursorFrame = window.requestAnimationFrame(renderCursor);
         });
