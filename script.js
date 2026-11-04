@@ -220,30 +220,54 @@ document.addEventListener("DOMContentLoaded", function() {
 
 document.addEventListener("DOMContentLoaded", function() {
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const heroCopy = document.querySelector(".hero-copy");
+    heroCopy?.classList.add("hero-spotlight");
 
-    if (!prefersReducedMotion.matches && "IntersectionObserver" in window) {
-        const revealTargets = document.querySelectorAll(
-            "#sobre .hero-copy > *, #sobre .hero-feature, " +
+    const revealTargets = Array.from(document.querySelectorAll(
+            "#sobre .hero-copy > *, #sobre .hero-portrait-card, " +
             "main > section:not(#sobre) .container > *, " +
             "#projetos .project-card, #formacao .education-card, " +
             "#servicos .service-card"
-        );
+    ));
 
-        revealTargets.forEach((element, index) => {
-            element.dataset.reveal = "up";
-            element.style.setProperty("--reveal-delay", `${(index % 5) * 75}ms`);
+    const revealGroups = document.querySelectorAll(
+        ".hero-copy, .projects-grid, .education-grid, .services-grid"
+    );
+    revealGroups.forEach(group => {
+        Array.from(group.children).forEach((element, index) => {
+            element.style.setProperty("--reveal-delay", `${(index % 4) * 115}ms`);
         });
+    });
 
+    revealTargets.forEach(element => {
+        element.dataset.reveal = "up";
+        if (!element.style.getPropertyValue("--reveal-delay")) {
+            element.style.setProperty("--reveal-delay", "0ms");
+        }
+    });
+
+    if (revealTargets.length) {
         document.body.classList.add("reveal-ready");
-        const revealObserver = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (!entry.isIntersecting) return;
-                entry.target.classList.add("is-revealed");
-                observer.unobserve(entry.target);
-            });
-        }, { threshold: 0.12, rootMargin: "0px 0px -45px 0px" });
+        if ("IntersectionObserver" in window) {
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+                    entry.target.classList.add("is-revealed");
+                    observer.unobserve(entry.target);
+                });
+            }, { threshold: 0.08, rootMargin: "0px 0px -32px 0px" });
 
-        revealTargets.forEach(element => revealObserver.observe(element));
+            revealTargets.forEach(element => revealObserver.observe(element));
+            window.requestAnimationFrame(() => {
+                revealTargets.forEach(element => {
+                    if (element.getBoundingClientRect().top < window.innerHeight * 0.92) {
+                        element.classList.add("is-revealed");
+                    }
+                });
+            });
+        } else {
+            revealTargets.forEach(element => element.classList.add("is-revealed"));
+        }
     }
 
     const cursor = document.querySelector(".custom-cursor");
@@ -251,21 +275,41 @@ document.addEventListener("DOMContentLoaded", function() {
         "(hover: hover) and (pointer: fine) and (min-width: 769px)"
     );
 
-    if (cursor && canUseCustomCursor.matches && !prefersReducedMotion.matches) {
+    if (cursor && canUseCustomCursor.matches) {
         document.body.classList.add("custom-cursor-enabled");
+        const pointerPosition = { x: -100, y: -100 };
+        const cursorPosition = { x: -100, y: -100 };
+        let cursorFrame = 0;
+
+        const renderCursor = () => {
+            cursorPosition.x += (pointerPosition.x - cursorPosition.x) * 0.22;
+            cursorPosition.y += (pointerPosition.y - cursorPosition.y) * 0.22;
+            cursor.style.setProperty("--cursor-x", `${cursorPosition.x}px`);
+            cursor.style.setProperty("--cursor-y", `${cursorPosition.y}px`);
+
+            if (Math.abs(pointerPosition.x - cursorPosition.x) > 0.15
+                || Math.abs(pointerPosition.y - cursorPosition.y) > 0.15) {
+                cursorFrame = window.requestAnimationFrame(renderCursor);
+            } else {
+                cursorFrame = 0;
+            }
+        };
 
         document.addEventListener("pointermove", event => {
-            cursor.style.setProperty("--cursor-x", `${event.clientX}px`);
-            cursor.style.setProperty("--cursor-y", `${event.clientY}px`);
+            if (event.pointerType === "touch") return;
+            pointerPosition.x = event.clientX;
+            pointerPosition.y = event.clientY;
             cursor.classList.add("is-visible");
             cursor.classList.toggle(
                 "is-hovering",
-                Boolean(event.target.closest("a, button, .constellation-node, .tab-link"))
+                event.target instanceof Element
+                    && Boolean(event.target.closest("a, button, .constellation-node, .tab-link"))
             );
+            if (!cursorFrame) cursorFrame = window.requestAnimationFrame(renderCursor);
         });
 
-        document.addEventListener("pointerleave", () => {
-            cursor.classList.remove("is-visible", "is-hovering");
+        document.addEventListener("pointerout", event => {
+            if (!event.relatedTarget) cursor.classList.remove("is-visible", "is-hovering");
         });
 
         document.addEventListener("pointerdown", () => {
@@ -275,15 +319,60 @@ document.addEventListener("DOMContentLoaded", function() {
         document.addEventListener("pointerup", () => {
             cursor.classList.remove("is-pressed");
         });
+
+        document.querySelectorAll(".cta-button, .header-cta, .contact-button").forEach(button => {
+            button.classList.add("magnetic-button");
+            button.addEventListener("pointermove", event => {
+                const bounds = button.getBoundingClientRect();
+                const x = event.clientX - bounds.left - bounds.width / 2;
+                const y = event.clientY - bounds.top - bounds.height / 2;
+                button.style.setProperty("--magnetic-x", `${x * 0.16}px`);
+                button.style.setProperty("--magnetic-y", `${y * 0.2}px`);
+            });
+            button.addEventListener("pointerleave", () => {
+                button.style.setProperty("--magnetic-x", "0px");
+                button.style.setProperty("--magnetic-y", "0px");
+            });
+        });
+
+        document.querySelectorAll(".project-card").forEach(card => {
+            card.addEventListener("pointermove", event => {
+                const bounds = card.getBoundingClientRect();
+                const x = event.clientX - bounds.left;
+                const y = event.clientY - bounds.top;
+                const rotateY = ((x / bounds.width) - 0.5) * 7;
+                const rotateX = (0.5 - (y / bounds.height)) * 7;
+                card.style.setProperty("--card-x", `${(x / bounds.width) * 100}%`);
+                card.style.setProperty("--card-y", `${(y / bounds.height) * 100}%`);
+                card.style.setProperty("--card-rotate-x", `${rotateX.toFixed(2)}deg`);
+                card.style.setProperty("--card-rotate-y", `${rotateY.toFixed(2)}deg`);
+            });
+            card.addEventListener("pointerleave", () => {
+                card.style.setProperty("--card-rotate-x", "0deg");
+                card.style.setProperty("--card-rotate-y", "0deg");
+                card.style.setProperty("--card-x", "50%");
+                card.style.setProperty("--card-y", "50%");
+            });
+        });
+
+        heroCopy?.addEventListener("pointermove", event => {
+            const bounds = heroCopy.getBoundingClientRect();
+            heroCopy.style.setProperty("--spot-x", `${event.clientX - bounds.left}px`);
+            heroCopy.style.setProperty("--spot-y", `${event.clientY - bounds.top}px`);
+        });
     }
 
     const scrollProgress = document.querySelector(".scroll-progress");
-    if (scrollProgress && !prefersReducedMotion.matches) {
+    if (scrollProgress) {
         let progressFrame = 0;
         const updateScrollProgress = () => {
             const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
             const progress = scrollableHeight > 0 ? window.scrollY / scrollableHeight : 0;
             scrollProgress.style.transform = `scaleX(${progress})`;
+            document.querySelector("#sobre")?.style.setProperty(
+                "--skyline-shift",
+                `${Math.min(window.scrollY * 0.12, 72)}px`
+            );
             progressFrame = 0;
         };
 
@@ -291,6 +380,85 @@ document.addEventListener("DOMContentLoaded", function() {
             if (!progressFrame) progressFrame = window.requestAnimationFrame(updateScrollProgress);
         }, { passive: true });
         updateScrollProgress();
+    }
+
+    const rainCanvas = document.querySelector(".city-rain");
+    const rainContext = rainCanvas?.getContext("2d");
+    if (rainCanvas && rainContext) {
+        const rain = [];
+        let canvasWidth = 0;
+        let canvasHeight = 0;
+        let rainFrame = 0;
+        let previousFrameTime = 0;
+        const rainCount = prefersReducedMotion.matches ? 18 : 54;
+
+        const resizeRain = () => {
+            const pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
+            canvasWidth = window.innerWidth;
+            canvasHeight = window.innerHeight;
+            rainCanvas.width = Math.round(canvasWidth * pixelRatio);
+            rainCanvas.height = Math.round(canvasHeight * pixelRatio);
+            rainCanvas.style.width = `${canvasWidth}px`;
+            rainCanvas.style.height = `${canvasHeight}px`;
+            rainContext.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+            rain.length = 0;
+
+            for (let index = 0; index < rainCount; index++) {
+                rain.push({
+                    x: Math.random() * canvasWidth,
+                    y: Math.random() * canvasHeight,
+                    length: 10 + Math.random() * 30,
+                    speed: 45 + Math.random() * 115,
+                    drift: 12 + Math.random() * 28,
+                    opacity: 0.08 + Math.random() * 0.22,
+                    gold: Math.random() > 0.82
+                });
+            }
+        };
+
+        const drawRain = timestamp => {
+            rainFrame = 0;
+            if (document.hidden) return;
+            const delta = previousFrameTime ? Math.min((timestamp - previousFrameTime) / 1000, 0.04) : 0;
+            previousFrameTime = timestamp;
+            rainContext.clearRect(0, 0, canvasWidth, canvasHeight);
+            rain.forEach(drop => {
+                drop.y += drop.speed * delta;
+                drop.x -= drop.drift * delta;
+                if (drop.y - drop.length > canvasHeight || drop.x < -10) {
+                    drop.y = -drop.length - Math.random() * canvasHeight * 0.2;
+                    drop.x = Math.random() * (canvasWidth + 40);
+                }
+                rainContext.beginPath();
+                rainContext.moveTo(drop.x, drop.y);
+                rainContext.lineTo(drop.x - drop.drift * 0.12, drop.y + drop.length);
+                rainContext.strokeStyle = drop.gold
+                    ? `rgba(242, 193, 78, ${drop.opacity})`
+                    : `rgba(142, 175, 217, ${drop.opacity})`;
+                rainContext.lineWidth = drop.gold ? 1 : 0.7;
+                rainContext.stroke();
+            });
+            rainFrame = window.requestAnimationFrame(drawRain);
+        };
+
+        const startRain = () => {
+            if (!document.hidden && !rainFrame) {
+                previousFrameTime = 0;
+                rainFrame = window.requestAnimationFrame(drawRain);
+            }
+        };
+
+        resizeRain();
+        startRain();
+        window.addEventListener("resize", resizeRain, { passive: true });
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden && rainFrame) {
+                window.cancelAnimationFrame(rainFrame);
+                rainFrame = 0;
+            } else {
+                startRain();
+            }
+        });
     }
 
     const constellation = document.querySelector(".skills-constellation");
@@ -302,7 +470,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const supportsConstellationInteraction = window.matchMedia("(min-width: 769px) and (hover: hover) and (pointer: fine)").matches;
 
     if (constellation && svg && edgeLayer && particleLayer && nodeElements.length
-        && !prefersReducedMotion.matches && supportsConstellationInteraction) {
+        && supportsConstellationInteraction) {
         const svgNamespace = "http://www.w3.org/2000/svg";
         const nodes = nodeElements.map((element, index) => ({
             element,
