@@ -40,12 +40,12 @@ document.addEventListener("DOMContentLoaded", function() {
             icon.classList.remove('fa-bars');
             icon.classList.add('fa-xmark');
             menuBtn.setAttribute('aria-expanded', 'true');
-            menuBtn.setAttribute('aria-label', 'Fechar menu');
+            menuBtn.setAttribute('aria-label', 'Close menu');
         } else {
             icon.classList.remove('fa-xmark');
             icon.classList.add('fa-bars');
             menuBtn.setAttribute('aria-expanded', 'false');
-            menuBtn.setAttribute('aria-label', 'Abrir menu');
+            menuBtn.setAttribute('aria-label', 'Open menu');
         }
     });
 
@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function() {
             icon.classList.remove('fa-xmark');
             icon.classList.add('fa-bars');
             menuBtn.setAttribute('aria-expanded', 'false');
-            menuBtn.setAttribute('aria-label', 'Abrir menu');
+            menuBtn.setAttribute('aria-label', 'Open menu');
         });
     });
 });
@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const options = {
             strings: [
                 'Matheus Henrique',
-                'Desenvolvedor Web',
+                'Web Developer',
                 'Designer',
                 'Pentester'
             ],
@@ -195,8 +195,8 @@ class TextScramble {
 document.addEventListener("DOMContentLoaded", function() {
     const phrases = [
         'Matheus Henrique',
-        'Desenvolvedor Fullstack',
-        'Designer Criativo',
+        'Full-Stack Developer',
+        'Creative Designer',
         'Pentester',
         'Editor de Vídeo'
     ];
@@ -347,7 +347,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 const edgeInfluence = Math.max(0, 1 - edgeDistance / 95);
                 path.style.strokeOpacity = (0.18 + edgeInfluence * 0.75).toFixed(3);
                 path.style.strokeWidth = (1 + edgeInfluence * 1.5).toFixed(2);
-                path.style.stroke = edgeInfluence > 0.08 ? "#9af3a1" : "";
+                path.style.stroke = edgeInfluence > 0.08 ? "#ffdb77" : "";
                 path.style.strokeDasharray = edgeInfluence > 0.08 ? "3 7" : "";
                 path.style.strokeDashoffset = edgeInfluence > 0.08 ? `${-(elapsed * 0.018) % 10}` : "0";
 

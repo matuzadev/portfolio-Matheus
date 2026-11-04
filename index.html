@@ -1,23 +1,23 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Portfólio de Matheus Henrique, desenvolvedor full stack. Conheça seus projetos, habilidades e formação.">
-    <meta name="keywords" content="HTML, CSS, JavaScript, Front-End, Desenvolvimento Web">
+    <meta name="description" content="Matheus Henrique is a software developer building polished, reliable web experiences, applications, and digital products. Explore selected work and get in touch.">
+    <meta name="keywords" content="Matheus Henrique, software developer, web development, full-stack, JavaScript, Java, cybersecurity">
     <meta name="author" content="Matheus Henrique">
     <meta name="robots" content="index, follow">
-    <meta name="theme-color" content="#101310">
+    <meta name="theme-color" content="#090d14">
 
 
-    <title>Matheus Henrique | Desenvolvedor Full Stack</title>
+    <title>Matheus Henrique | Software Developer</title>
 
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
         integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
@@ -31,67 +31,30 @@
 
 
 
-    <div id="google_translate_element" style="display:none;"></div>
-
-    <script type="text/javascript">
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({
-                pageLanguage: 'pt',
-                includedLanguages: 'en,pt,es',
-                autoDisplay: false
-            }, 'google_translate_element');
-        }
-
-        function translatePage(lang) {
-            var selectField = document.querySelector("select.goog-te-combo");
-            if (selectField) {
-                selectField.value = lang;
-                // Dispara o evento de mudança para o Google perceber a troca
-                selectField.dispatchEvent(new Event('change'));
-            }
-
-            // Mantém o banner escondido caso ele tente voltar
-            setTimeout(function () {
-                var banner = document.querySelector(".goog-te-banner-frame");
-                if (banner) banner.style.setProperty('display', 'none', 'important');
-                document.body.style.top = '0px';
-            }, 500);
-        }
-    </script>
-
-    <script type="text/javascript"
-        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
-
     <header>
         <div class="container">
-            <div class="logo"><span class="logo-initials">MH</span> Matheus Henrique</div>
+            <a class="logo" href="#sobre" aria-label="Matheus Henrique, home"><span class="logo-initials">MH</span> MATHEUS HENRIQUE</a>
 
-            <nav class="nav-desktop" aria-label="Navegação principal">
+            <nav class="nav-desktop" aria-label="Main navigation">
                 <ul>
-                    <li><a href="#projetos">Projetos</a></li>
-                    <li><a href="#sobre">Sobre</a></li>
-                    <li><a href="#formacao">Formação</a></li>
-                    <li><a href="#contato">Contato</a></li>
+                    <li><a href="#projetos">Work</a></li>
+                    <li><a href="#sobre">About</a></li>
+                    <li><a href="#formacao">Education</a></li>
+                    <li><a href="#contato">Contact</a></li>
                 </ul>
             </nav>
 
-            <div class="translation-icons" aria-label="Selecionar idioma">
-                <a href="#" onclick="translatePage('pt'); return false;" lang="pt-BR" title="Português" aria-label="Português">PT</a>
-                <a href="#" onclick="translatePage('en'); return false;" lang="en" title="English" aria-label="English">EN</a>
-                <a href="#" onclick="translatePage('es'); return false;" lang="es" title="Español" aria-label="Español">ES</a>
-            </div>
-
-            <button id="menu-btn" class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-nav">
+            <a class="header-cta" href="#contato">Let’s talk <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+            <button id="menu-btn" class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav">
                 <i class="fa-solid fa-bars" aria-hidden="true"></i>
             </button>
         </div>
 
-        <nav id="mobile-nav" class="nav-mobile" aria-label="Navegação móvel">
-            <a href="#projetos" class="mobile-link">Projetos</a>
-            <a href="#sobre" class="mobile-link">Sobre</a>
-            <a href="#formacao" class="mobile-link">Formação</a>
-            <a href="#contato" class="mobile-link">Contato</a>
+        <nav id="mobile-nav" class="nav-mobile" aria-label="Mobile navigation">
+            <a href="#projetos" class="mobile-link">Work</a>
+            <a href="#sobre" class="mobile-link">About</a>
+            <a href="#formacao" class="mobile-link">Education</a>
+            <a href="#contato" class="mobile-link">Contact</a>
         </nav>
     </header>
 
@@ -101,23 +64,23 @@
         <div class="container">
             <div class="about-content">
                 <div class="hero-copy">
-                    <p class="hero-eyebrow">MATHEUS HENRIQUE <span>/</span> DESENVOLVEDOR FULL STACK</p>
-                    <h1>Do conceito<br>ao <span>código.</span></h1>
-                    <p class="hero-description">Desenvolvo aplicações web e sistemas com foco em interfaces claras, desempenho e código bem estruturado.</p>
+                    <p class="hero-eyebrow"><span class="status-dot"></span> SOFTWARE DEVELOPER <span>/</span> AVAILABLE FOR PROJECTS</p>
+                    <h1><span class="hero-name">Matheus</span><br>Henrique<span class="hero-period">.</span></h1>
+                    <p class="hero-description">I turn ambitious ideas into polished digital products—combining thoughtful design, reliable engineering, and a sharp eye for detail.</p>
                     <div class="hero-actions">
-                        <a href="#projetos" class="cta-button">Explorar projetos <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
-                        <a href="#contato" class="hero-contact-link">Entrar em contato</a>
+                        <a href="#projetos" class="cta-button">Explore my work <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+                        <a href="#contato" class="hero-contact-link">Have a project in mind? <span>Let’s talk</span></a>
                     </div>
                 </div>
-                <a class="hero-feature" href="https://github.com/MATHEUSH-DEV/Project-xlogin-java" target="_blank" rel="noopener noreferrer" aria-label="Conheça o sistema de login no GitHub">
+                <a class="hero-feature" href="https://github.com/MATHEUSH-DEV/Project-xlogin-java" target="_blank" rel="noopener noreferrer" aria-label="View the Java login system on GitHub">
                     <div class="hero-feature-heading">
-                        <span>PROJETO EM DESTAQUE</span>
-                        <span>01 / 03</span>
+                        <span>SELECTED PROJECT</span>
+                        <span>01 / FEATURED</span>
                     </div>
-                    <img src="midia/sistema-login.png" alt="Tela do sistema de login desenvolvido em Java">
+                    <img src="midia/sistema-login.png" alt="Preview of the Java login system">
                     <div class="hero-feature-caption">
                         <div>
-                            <h2>Sistema de login</h2>
+                            <h2>Secure Login System</h2>
                             <p>Java <span>·</span> SQLite</p>
                         </div>
                         <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
@@ -129,28 +92,29 @@
 
     <section id="projetos">
         <div class="container">
-            <h2>Meus Projetos</h2>
+            <p class="section-kicker">SELECTED WORK</p>
+            <h2>Built to make<br>an impact<span class="hero-period">.</span></h2>
+            <p class="section-intro">A selection of projects where clean interfaces meet thoughtful engineering.</p>
 
             <div class="tabs-container">
-                <button class="tab-link active" onclick="openTab(event, 'web')">Projetos Web</button>
-                <button class="tab-link" onclick="openTab(event, 'estudos')">Estudos e Outros Projetos</button>
+                <button class="tab-link active" onclick="openTab(event, 'web')">Featured projects</button>
+                <button class="tab-link" onclick="openTab(event, 'estudos')">Experiments &amp; studies</button>
 
             </div>
 
 
-            <!-- PARTE DO DESENVOLVIMENTO WEB -->
             <div id="web" class="tab-content active">
                 <div class="projects-grid">
 
                     <div class="project-card">
                         <video autoplay loop muted playsinline src="midia/hacking-etico.mp4">
-                            Seu navegador não suporta o elemento do vídeo.
+                            Your browser does not support the video element.
                         </video>
-                        <h3>Site Hacking Ético</h3>
-                        <p>Projeto que destaca minhas habilidades de Cibersegurança e minhas habilidades em CSS.</p>
+                        <h3>Ethical Hacking Website</h3>
+                        <p>A cybersecurity-focused experience showcasing security concepts through a custom, responsive interface.</p>
                         <div class="project-links">
-                            <a href="https://hacking-etico.netlify.app/" target="_blank">Ver Demo</a>
-                            <a href="https://github.com/matuza450/sitehacking" target="_blank">Código no GitHub</a>
+                            <a href="https://hacking-etico.netlify.app/" target="_blank" rel="noopener noreferrer">Live demo <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                            <a href="https://github.com/matuza450/sitehacking" target="_blank" rel="noopener noreferrer">Source code</a>
                         </div>
 
                         <div class="project-tech-list">
@@ -161,15 +125,13 @@
                     </div>
 
                     <div class="project-card">
-                        <img src="midia/sistema-login.png" alt="Sistema de Login em Java">
-                        <h3>Sistema de Login Em Java</h3>
-                        <p>Implementação de um sistema de autenticação seguro utilizando SQLite e DBeaver, com foco em
-                            segurança e eficiência.</p>
+                        <img src="midia/sistema-login.png" alt="Java authentication system interface">
+                        <h3>Java Authentication System</h3>
+                        <p>A desktop authentication app built with Java and SQLite, designed around secure credential handling and a straightforward user experience.</p>
 
 
                         <div class="project-links">
-                            <a href="https://github.com/MATHEUSH-DEV/Project-xlogin-java" target="_blank">Código no
-                                GitHub</a>
+                            <a href="https://github.com/MATHEUSH-DEV/Project-xlogin-java" target="_blank" rel="noopener noreferrer">View source code</a>
                         </div>
                         <div class="project-tech-list">
                             <span><i class="devicon-java-plain"></i> Java</span>
@@ -187,14 +149,12 @@
                     <div class="project-card">
                         <div class="project-art project-art-c" aria-hidden="true">
                             <i class="devicon-c-plain"></i>
-                            <span>ESTUDOS EM C</span>
+                            <span>C PROGRAMMING STUDIES</span>
                         </div>
-                        <h3>Coleção de Estudos em Linguagem C</h3>
-                        <p>Um repositório com diversos projetos acadêmicos e "mini projetos" desenvolvidos para
-                            praticar a lógica e os fundamentos da programação em C.</p>
+                        <h3>C Programming Collection</h3>
+                        <p>A collection of academic exercises and small projects exploring programming fundamentals, problem-solving, and the C language.</p>
                         <div class="project-links">
-                            <a href="https://github.com/MATHEUSH-DEV/projetos-em-c" target="_blank">Ver Coleção no
-                                GitHub</a>
+                            <a href="https://github.com/MATHEUSH-DEV/projetos-em-c" target="_blank" rel="noopener noreferrer">Explore the repository</a>
                         </div>
                         <div class="project-tech-list">
                             <span><i class="devicon-c-plain"></i> C</span>
@@ -209,24 +169,25 @@
     </section>
     <section id="formacao">
         <div class="container">
-            <h2>Formação Acadêmica</h2>
+            <p class="section-kicker">THE FOUNDATION</p>
+            <h2>Learning by<br>building<span class="hero-period">.</span></h2>
             <div class="education-grid">
 
                 <div class="education-card">
                     <div class="education-header">
-                        <h3>Engenharia de Software</h3>
+                        <h3>B.Sc. in Software Engineering</h3>
 
                         <p class="instituicao"><i class="fa-solid fa-graduation-cap"></i> Anhanguera Educacional</p>
 
                     </div>
                     <div class="education-details">
-                        <p><strong>Status:</strong> Cursando - 1° de 8 semestres</p>
-                        <p><strong>Previsão de conclusão:</strong> Julho/2029</p>
+                        <p><strong>Status:</strong> In progress · Year 1 of 4</p>
+                        <p><strong>Expected graduation:</strong> July 2029</p>
 
                     </div>
                     <div class="progress-container">
                         <div class="progress-bar-label">
-                            <span>Progresso do Curso</span>
+                            <span>Program progress</span>
                             <span>10%</span>
                         </div>
                         <div class="progress-bar">
@@ -237,18 +198,17 @@
 
                 <div class="education-card">
                     <div class="education-header">
-                        <h3>Técnico em Desenvolvimento de Sistemas</h3>
-                        <p class="instituicao"><i class="fa-solid fa-graduation-cap"></i> Instituto Federal de
-                            Brasília</p><br>
+                        <h3>Technical Diploma in Systems Development</h3>
+                        <p class="instituicao"><i class="fa-solid fa-graduation-cap"></i> Federal Institute of Brasília</p><br>
                     </div>
                     <div class="education-details">
-                        <p><strong>Status:</strong> Cursando - 2º de 4 semestres</p>
-                        <p><strong>Previsão de conclusão:</strong> Dezembro/2026</p>
+                        <p><strong>Status:</strong> In progress · Year 2 of 2</p>
+                        <p><strong>Expected graduation:</strong> December 2026</p>
 
                     </div>
                     <div class="progress-container">
                         <div class="progress-bar-label">
-                            <span>Progresso do Curso</span>
+                            <span>Program progress</span>
                             <span>50%</span>
 
                         </div>
@@ -262,16 +222,16 @@
                 </div>
                 <div class="education-card">
                     <div class="education-header">
-                        <h3>Certificado Profissional em Análise de Dados do Google</h3>
+                        <h3>Google Data Analytics Professional Certificate</h3>
                         <p class="instituicao"><i class="fa-solid fa-graduation-cap"></i> Google | Coursera</p>
                     </div>
                     <div class="education-details">
-                        <p><strong>Status:</strong> Formado</p>
-                        <p><strong>Conclusão:</strong> Fevereiro/2026</p>
+                        <p><strong>Status:</strong> Completed</p>
+                        <p><strong>Completed:</strong> February 2026</p>
                     </div>
                     <div class="progress-container">
                         <div class="progress-bar-label">
-                            <span>Progresso do curso</span>
+                            <span>Program progress</span>
                             <span>100%</span>
                         </div>
                         <div class="progress-bar">
@@ -281,31 +241,30 @@
                 </div>
             </div>
         </div>
-        </div>
     </section>
 
     <section id="habilidades">
         <div class="container">
             <div class="skills-heading">
-                <p class="skills-eyebrow"><span></span> MINHA STACK</p>
-                <h2>Habilidades</h2>
-                <p class="skills-intro">Tecnologias e ferramentas conectadas para transformar ideias em soluções digitais.</p>
+                <p class="skills-eyebrow"><span></span> MY TOOLKIT</p>
+                <h2>Tools of the trade</h2>
+                <p class="skills-intro">A versatile toolkit for designing, building, and improving digital products.</p>
             </div>
 
-            <div class="skills-constellation" aria-label="Constelação de tecnologias e habilidades">
+            <div class="skills-constellation" aria-label="Interactive constellation of technologies and skills">
                 <svg class="constellation-lines" viewBox="0 0 1000 520" preserveAspectRatio="none" aria-hidden="true">
                     <g class="constellation-edge-layer"></g>
                     <g class="constellation-particle-layer"></g>
                 </svg>
 
                 <p class="constellation-label constellation-label-frontend">
-                    <i class="fa-solid fa-code" aria-hidden="true"></i> FRONTEND
+                    <i class="fa-solid fa-code" aria-hidden="true"></i> FRONT END
                 </p>
                 <p class="constellation-label constellation-label-backend">
-                    <i class="fa-solid fa-server" aria-hidden="true"></i> BACKEND &amp; FERRAMENTAS
+                    <i class="fa-solid fa-server" aria-hidden="true"></i> BACK END &amp; TOOLS
                 </p>
 
-                <ul class="constellation-nodes" aria-label="Tecnologias">
+                <ul class="constellation-nodes" aria-label="Technologies">
                     <li class="constellation-node" style="--x: 9.2%; --y: 28.8%;">
                         <span class="skill-node-icon"><i class="devicon-html5-plain" aria-hidden="true"></i></span>
                         <span>HTML5</span>
@@ -394,7 +353,9 @@
 
     <section id="servicos">
         <div class="container">
-            <h2>Serviços Disponíveis</h2>
+            <p class="section-kicker">HOW I CAN HELP</p>
+            <h2>From first sketch<br>to launch<span class="hero-period">.</span></h2>
+            <p class="section-intro">Focused, flexible development support to move your next idea forward.</p>
             <div class="services-grid">
 
                 <a href="#contato" class="service-card-link">
@@ -402,8 +363,8 @@
                         <div class="service-icon">
                             <i class="fa-solid fa-code"></i>
                         </div>
-                        <h3>Desenvolvimento Web</h3>
-                        <p>Criação de sites e aplicações web responsivas, modernas e otimizadas para performance.
+                        <h3>Web Development</h3>
+                        <p>Responsive websites and web apps that load fast, look sharp, and turn visitors into customers.
                         </p>
                     </div>
                 </a>
@@ -413,9 +374,8 @@
                         <div class="service-icon">
                             <i class="fa-solid fa-database"></i>
                         </div>
-                        <h3>Desenvolvimento Backend</h3>
-                        <p>Desenvolvimento de APIs, sistemas de autenticação e integrações com bancos de dados para
-                            garantir a funcionalidade e segurança do seu projeto.</p>
+                        <h3>Back-End &amp; APIs</h3>
+                        <p>Reliable APIs, authentication, and database integrations designed to keep your product secure and scalable.</p>
                     </div>
                 </a>
 
@@ -424,9 +384,8 @@
                         <div class="service-icon">
                             <i class="fa-solid fa-code"></i>
                         </div>
-                        <h3>Desenvolvimento de Interface Gráfica em Java</h3>
-                        <p>Criação de aplicativos desktop utilizando Java Swing e JavaFX, garantindo uma
-                            experiência fluida e intuitiva para os usuários.</p>
+                        <h3>Java Desktop Applications</h3>
+                        <p>Intuitive desktop software built with Java Swing or JavaFX, tailored to your team's workflow.</p>
                     </div>
                 </a>
 
@@ -435,9 +394,8 @@
                         <div class="service-icon">
                             <i class="fa-solid fa-shield-halved"></i>
                         </div>
-                        <h3>Consultoria em Cibersegurança</h3>
-                        <p>Análise de vulnerabilidades, implementação de medidas de segurança e treinamento para
-                            proteger seus sistemas contra ameaças cibernéticas.</p>
+                        <h3>Cybersecurity</h3>
+                        <p>Practical security reviews and guidance to help identify risks and strengthen your digital foundations.</p>
                     </div>
                 </a>
 
@@ -446,9 +404,8 @@
                         <div class="service-icon">
                             <i class="fa-solid fa-chart-line"></i>
                         </div>
-                        <h3>Análise de Dados</h3>
-                        <p>Coleta, limpeza e análise de dados para fornecer insights valiosos e apoiar a tomada de
-                            decisões estratégicas.</p>
+                        <h3>Data Analytics</h3>
+                        <p>Clear, actionable insights from organized data to support smarter product and business decisions.</p>
                     </div>
 
                 </a>
@@ -459,9 +416,8 @@
                         <div class="service-icon">
                             <i class="fa-solid fa-screwdriver-wrench"></i>
                         </div>
-                        <h3>Serviços Freelancer</h3>
-                        <p>Serviços de criação, otimização e atendimento de alta qualidade para transformar suas
-                            ideias em realidade digital.</p>
+                        <h3>Freelance Collaboration</h3>
+                        <p>Flexible project support, from an initial concept or focused improvement to a polished final delivery.</p>
                     </div>
                 </a>
 
@@ -472,24 +428,24 @@
     <section id="contato">
         <div class="container">
             <div class="contact-box">
-                <h2>Vamos Conversar?</h2>
+                <p class="section-kicker">YOUR NEXT MOVE</p>
+                <h2>Let’s build<br>something great<span class="hero-period">.</span></h2>
                 <p>
-                    Se você tem um projeto em mente, uma pergunta, ou simplesmente quer conectar, o meu inbox está
-                    sempre aberto. Adoraria ouvir a sua ideia e ver como podemos trabalhar juntos.
+                    Have a project in mind? Tell me what you’re working on. I’m open to new opportunities and collaborations, and ready to help turn a good idea into a great product.
                 </p>
                 <div class="contact-links-container">
                     <a href="mailto:mattuza@yahoo.com" class="contact-button">
                         <i class="fa-solid fa-envelope"></i>
-                        <span>Enviar um Email</span>
+                        <span>Email me</span>
                     </a>
                     <a href="https://linkedin.com/in/matheus-henrique-3261a6361/" target="_blank"
                         class="contact-button" rel="noopener noreferrer">
                         <i class="fa-brands fa-linkedin"></i>
-                        <span>Conectar no LinkedIn</span>
+                        <span>Connect on LinkedIn</span>
                     </a>
                     <a href="https://github.com/MATHEUSH-DEV" target="_blank" class="contact-button" rel="noopener noreferrer">
                         <i class="fa-brands fa-github"></i>
-                        <span>Ver no GitHub</span>
+                        <span>Explore GitHub</span>
                     </a>
                 </div>
             </div>
@@ -499,8 +455,8 @@
 
     <footer>
         <div class="container">
-            <p>&copy; 2026 Matheus Henrique <span>•</span> Desenvolvido por Matheus Henrique.</p>
-            <a href="#sobre">Voltar ao topo <i class="fa-solid fa-arrow-up" aria-hidden="true"></i></a>
+            <p>&copy; 2026 Matheus Henrique <span>•</span> Designed and built by Matheus Henrique.</p>
+            <a href="#sobre">Back to top <i class="fa-solid fa-arrow-up" aria-hidden="true"></i></a>
         </div>
     </footer>
 
