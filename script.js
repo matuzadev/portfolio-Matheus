@@ -219,12 +219,85 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 document.addEventListener("DOMContentLoaded", function() {
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    if (!prefersReducedMotion.matches && "IntersectionObserver" in window) {
+        const revealTargets = document.querySelectorAll(
+            "#sobre .hero-copy > *, #sobre .hero-feature, " +
+            "main > section:not(#sobre) .container > *, " +
+            "#projetos .project-card, #formacao .education-card, " +
+            "#servicos .service-card"
+        );
+
+        revealTargets.forEach((element, index) => {
+            element.dataset.reveal = "up";
+            element.style.setProperty("--reveal-delay", `${(index % 5) * 75}ms`);
+        });
+
+        document.body.classList.add("reveal-ready");
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                entry.target.classList.add("is-revealed");
+                observer.unobserve(entry.target);
+            });
+        }, { threshold: 0.12, rootMargin: "0px 0px -45px 0px" });
+
+        revealTargets.forEach(element => revealObserver.observe(element));
+    }
+
+    const cursor = document.querySelector(".custom-cursor");
+    const canUseCustomCursor = window.matchMedia(
+        "(hover: hover) and (pointer: fine) and (min-width: 769px)"
+    );
+
+    if (cursor && canUseCustomCursor.matches && !prefersReducedMotion.matches) {
+        document.body.classList.add("custom-cursor-enabled");
+
+        document.addEventListener("pointermove", event => {
+            cursor.style.setProperty("--cursor-x", `${event.clientX}px`);
+            cursor.style.setProperty("--cursor-y", `${event.clientY}px`);
+            cursor.classList.add("is-visible");
+            cursor.classList.toggle(
+                "is-hovering",
+                Boolean(event.target.closest("a, button, .constellation-node, .tab-link"))
+            );
+        });
+
+        document.addEventListener("pointerleave", () => {
+            cursor.classList.remove("is-visible", "is-hovering");
+        });
+
+        document.addEventListener("pointerdown", () => {
+            cursor.classList.add("is-pressed");
+        });
+
+        document.addEventListener("pointerup", () => {
+            cursor.classList.remove("is-pressed");
+        });
+    }
+
+    const scrollProgress = document.querySelector(".scroll-progress");
+    if (scrollProgress && !prefersReducedMotion.matches) {
+        let progressFrame = 0;
+        const updateScrollProgress = () => {
+            const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = scrollableHeight > 0 ? window.scrollY / scrollableHeight : 0;
+            scrollProgress.style.transform = `scaleX(${progress})`;
+            progressFrame = 0;
+        };
+
+        window.addEventListener("scroll", () => {
+            if (!progressFrame) progressFrame = window.requestAnimationFrame(updateScrollProgress);
+        }, { passive: true });
+        updateScrollProgress();
+    }
+
     const constellation = document.querySelector(".skills-constellation");
     const svg = constellation?.querySelector(".constellation-lines");
     const edgeLayer = svg?.querySelector(".constellation-edge-layer");
     const particleLayer = svg?.querySelector(".constellation-particle-layer");
     const nodeElements = Array.from(constellation?.querySelectorAll(".constellation-node") || []);
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
     const supportsConstellationInteraction = window.matchMedia("(min-width: 769px) and (hover: hover) and (pointer: fine)").matches;
 
