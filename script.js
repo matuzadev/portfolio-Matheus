@@ -1,645 +1,524 @@
-// --- CONTROLE DO MENU HAMBÚRGUER ---
-document.addEventListener("DOMContentLoaded", function() {
-    const menuBtn = document.getElementById('menu-btn');
-    const mobileNav = document.getElementById('mobile-nav');
-    const mobileLinks = document.querySelectorAll('.mobile-link');
+/* ==========================================================================
+   MATHEUS HENRIQUE — PORTFOLIO 2026 | SCRIPT.JS
+   Stack: Lenis (smooth scroll) + GSAP + ScrollTrigger + SplitType
 
-    // Função para abrir/fechar o menu
-    menuBtn.addEventListener('click', () => {
-        mobileNav.classList.toggle('active');
-        // Muda o ícone de barras para 'X' e vice-versa
-        const icon = menuBtn.querySelector('i');
-        if (mobileNav.classList.contains('active')) {
-            icon.classList.remove('fa-bars');
-            icon.classList.add('fa-xmark');
-            menuBtn.setAttribute('aria-expanded', 'true');
-            menuBtn.setAttribute('aria-label', 'Close menu');
-        } else {
-            icon.classList.remove('fa-xmark');
-            icon.classList.add('fa-bars');
-            menuBtn.setAttribute('aria-expanded', 'false');
-            menuBtn.setAttribute('aria-label', 'Open menu');
-        }
-    });
+   Organização:
+   1. Utilitários
+   2. Lenis Smooth Scroll
+   3. GSAP & ScrollTrigger Setup
+   4. Hero Animations
+   5. Section Reveals
+   6. Education Progress Bars
+   7. Custom Cursor
+   8. Mobile Menu
+   9. Scroll Progress Bar
+   10. Constellation Lines (Skills)
+   11. Cleanup & Resize
+   ========================================================================== */
 
-    // Função para fechar o menu ao clicar em um link
-    mobileLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            mobileNav.classList.remove('active');
-            // Restaura o ícone para barras
-            const icon = menuBtn.querySelector('i');
-            icon.classList.remove('fa-xmark');
-            icon.classList.add('fa-bars');
-            menuBtn.setAttribute('aria-expanded', 'false');
-            menuBtn.setAttribute('aria-label', 'Open menu');
-        });
-    });
-});
+// --- 1. UTILITÁRIOS -------------------------------------------------------
 
-// --- CONTROLE DO MODAL DE PROJETOS ---
-document.addEventListener("DOMContentLoaded", function() {
-    const openModalButtons = document.querySelectorAll('[data-modal-target]');
-    const closeModalButtons = document.querySelectorAll('.modal-close-btn');
-    const overlays = document.querySelectorAll('.modal-overlay');
+/** Verifica se usuário prefere reduced motion */
+const prefersReducedMotion = () =>
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Função para abrir o modal
-    const openModal = (modal) => {
-        if (modal == null) return;
-        modal.classList.add('active');
-    };
-
-    // Função para fechar o modal
-    const closeModal = (modal) => {
-        if (modal == null) return;
-        modal.classList.remove('active');
-    };
-
-    // Adiciona evento de clique aos botões de abrir
-    openModalButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const modal = document.querySelector(button.dataset.modalTarget);
-            openModal(modal);
-        });
-    });
-
-    // Adiciona evento de clique aos botões de fechar (o 'x')
-    closeModalButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const modal = button.closest('.modal');
-            closeModal(modal);
-        });
-    });
-
-    // Adiciona evento de clique aos overlays para fechar
-    overlays.forEach(overlay => {
-        overlay.addEventListener('click', () => {
-            const modal = overlay.closest('.modal');
-            closeModal(modal);
-        });
-    });
-});
-
-// Adicione este código ao final do seu arquivo script.js
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Verifica se o elemento existe antes de iniciar
-    if (document.querySelector('.typing-target')) {
-        const options = {
-            strings: [
-                'Matheus Henrique',
-                'Web Developer',
-                'Designer',
-                'Pentester'
-            ],
-            typeSpeed: 20,      // Velocidade de digitação
-            backSpeed: 25,      // Velocidade ao apagar
-            backDelay: 2000,    // Tempo de espera antes de apagar
-            startDelay: 500,    // Tempo de espera antes de começar
-            loop: true,         // Faz a animação repetir
-            showCursor: true,
-            cursorChar: '|',
-        };
-
-        new Typed('.typing-target', options);
-    }
-});
-
-// ============================================================================
-// NOVO EFEITO DE DECODIFICAÇÃO DE TEXTO (TEXT SCRAMBLE EFFECT)
-// ============================================================================
-class TextScramble {
-    constructor(el) {
-        this.el = el;
-        this.chars = '!<>-_\\/[]{}—=+*^?#________';
-        this.update = this.update.bind(this);
-    }
-
-    setText(newText) {
-        const oldText = this.el.innerText;
-        const length = Math.max(oldText.length, newText.length);
-        const promise = new Promise((resolve) => this.resolve = resolve);
-        this.queue = [];
-        for (let i = 0; i < length; i++) {
-            const from = oldText[i] || '';
-            const to = newText[i] || '';
-            const start = Math.floor(Math.random() * 40);
-            const end = start + Math.floor(Math.random() * 40);
-            this.queue.push({ from, to, start, end });
-        }
-        cancelAnimationFrame(this.frameRequest);
-        this.frame = 0;
-        this.update();
-        return promise;
-    }
-
-    update() {
-        let output = '';
-        let complete = 0;
-        for (let i = 0, n = this.queue.length; i < n; i++) {
-            let { from, to, start, end, char } = this.queue[i];
-            if (this.frame >= end) {
-                complete++;
-                output += to;
-            } else if (this.frame >= start) {
-                if (!char || Math.random() < 0.28) {
-                    char = this.randomChar();
-                    this.queue[i].char = char;
-                }
-                output += `<span class="scramble-char">${char}</span>`;
-            } else {
-                output += from;
-            }
-        }
-        this.el.innerHTML = output;
-        if (complete === this.queue.length) {
-            this.resolve();
-        } else {
-            this.frameRequest = requestAnimationFrame(this.update);
-            this.frame++;
-        }
-    }
-
-    randomChar() {
-        return this.chars[Math.floor(Math.random() * this.chars.length)];
-    }
+/** Debounce simples para resize handlers */
+function debounce(fn, delay = 150) {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn(...args), delay);
+  };
 }
 
-// --- INICIALIZAÇÃO DO EFEITO ---
-document.addEventListener("DOMContentLoaded", function() {
-    const phrases = [
-        'Matheus Henrique',
-        'Full-Stack Developer',
-        'Creative Designer',
-        'Pentester',
-        'Editor de Vídeo'
-    ];
+// --- 2. LENIS SMOOTH SCROLL -----------------------------------------------
 
-    const el = document.getElementById('headline-text');
-    if (el) {
-        const fx = new TextScramble(el);
-        let counter = 0;
+let lenis;
 
-        const next = () => {
-            fx.setText(phrases[counter]).then(() => {
-                setTimeout(next, 3000); // Tempo de espera antes de ir para a próxima frase
-            });
-            counter = (counter + 1) % phrases.length;
-        };
+function initLenis() {
+  // Respeita prefers-reduced-motion: não inicia smooth scroll
+  if (prefersReducedMotion()) return;
 
-        // Adiciona um pequeno delay antes de iniciar para dar tempo da página carregar
-        setTimeout(next, 1000);
+  lenis = new Lenis({
+    duration: 1.2,
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    smoothWheel: true,
+    wheelMultiplier: 1,
+    touchMultiplier: 1.5,
+  });
+
+  // Integração com GSAP ScrollTrigger
+  lenis.on('scroll', ScrollTrigger.update);
+
+  gsap.ticker.add((time) => {
+    lenis.raf(time * 1000);
+  });
+
+  gsap.ticker.lagSmoothing(0);
+}
+
+// --- 3. GSAP & SCROLLTRIGGER SETUP ----------------------------------------
+
+function initGSAP() {
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Configuração global: respeitar reduced motion
+  if (prefersReducedMotion()) {
+    ScrollTrigger.defaults({ enabled: false });
+    return;
+  }
+
+  // Refresh após fonts carregarem para evitar layout shift
+  document.fonts.ready.then(() => {
+    ScrollTrigger.refresh();
+  });
+}
+
+// --- 4. HERO ANIMATIONS ---------------------------------------------------
+
+function animateHero() {
+  if (prefersReducedMotion()) return;
+
+  const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
+
+  // Eyebrow fade-in
+  tl.from('.hero-eyebrow', {
+    opacity: 0,
+    y: 20,
+    duration: 0.8,
+  });
+
+  // H1 split-text reveal (caractere por caractere)
+  const heroName = document.querySelector('#sobre h1');
+  if (heroName && typeof SplitType !== 'undefined') {
+    const split = new SplitType(heroName, { types: 'chars' });
+    tl.from(split.chars, {
+      opacity: 0,
+      y: '100%',
+      rotateX: -40,
+      stagger: 0.03,
+      duration: 1,
+      ease: 'back.out(1.4)',
+    }, '-=0.4');
+  }
+
+  // Description fade
+  tl.from('.hero-description', {
+    opacity: 0,
+    y: 30,
+    duration: 0.8,
+  }, '-=0.5');
+
+  // CTA buttons stagger
+  tl.from('.hero-actions > *', {
+    opacity: 0,
+    y: 20,
+    stagger: 0.15,
+    duration: 0.6,
+  }, '-=0.4');
+
+  // Portrait card reveal com mask animation
+  tl.from('.hero-portrait-card', {
+    opacity: 0,
+    scale: 0.95,
+    clipPath: 'inset(10% 10% 10% 10%)',
+    duration: 1.2,
+    ease: 'power3.inOut',
+  }, '-=0.8');
+}
+
+// --- 5. SECTION REVEALS ---------------------------------------------------
+
+function animateSections() {
+  if (prefersReducedMotion()) return;
+
+  // Kicker + H2 de cada seção
+  const sectionHeaders = document.querySelectorAll(
+    '#projetos .section-kicker, #projetos h2, #projetos .section-intro, ' +
+    '#formacao .section-kicker, #formacao h2, ' +
+    '#habilidades .skills-eyebrow, #habilidades h2, #habilidades .skills-intro, ' +
+    '#servicos .section-kicker, #servicos h2, #servicos .section-intro, ' +
+    '#contato .section-kicker, #contato h2, #contato p'
+  );
+
+  sectionHeaders.forEach((el) => {
+    gsap.from(el, {
+      scrollTrigger: {
+        trigger: el,
+        start: 'top 85%',
+        toggleActions: 'play none none none',
+      },
+      opacity: 0,
+      y: 40,
+      duration: 0.8,
+      ease: 'power3.out',
+    });
+  });
+
+  // Project cards stagger entrance
+  gsap.from('.project-card', {
+    scrollTrigger: {
+      trigger: '.projects-grid',
+      start: 'top 80%',
+      toggleActions: 'play none none none',
+    },
+    opacity: 0,
+    y: 60,
+    stagger: 0.2,
+    duration: 0.8,
+    ease: 'power3.out',
+  });
+
+  // Education cards stagger
+  gsap.from('.education-card', {
+    scrollTrigger: {
+      trigger: '.education-grid',
+      start: 'top 80%',
+      toggleActions: 'play none none none',
+    },
+    opacity: 0,
+    y: 50,
+    stagger: 0.15,
+    duration: 0.7,
+    ease: 'power3.out',
+  });
+
+  // Service cards stagger
+  gsap.from('.service-card', {
+    scrollTrigger: {
+      trigger: '.services-grid',
+      start: 'top 80%',
+      toggleActions: 'play none none none',
+    },
+    opacity: 0,
+    y: 40,
+    stagger: 0.1,
+    duration: 0.6,
+    ease: 'power3.out',
+  });
+
+  // Contact box reveal
+  gsap.from('.contact-box', {
+    scrollTrigger: {
+      trigger: '.contact-box',
+      start: 'top 85%',
+      toggleActions: 'play none none none',
+    },
+    opacity: 0,
+    y: 50,
+    scale: 0.97,
+    duration: 0.9,
+    ease: 'power3.out',
+  });
+
+  // Skills constellation nodes
+  gsap.from('.constellation-node', {
+    scrollTrigger: {
+      trigger: '.skills-constellation',
+      start: 'top 80%',
+      toggleActions: 'play none none none',
+    },
+    opacity: 0,
+    scale: 0,
+    stagger: {
+      each: 0.05,
+      from: 'center',
+    },
+    duration: 0.5,
+    ease: 'back.out(1.7)',
+  });
+}
+
+// --- 6. EDUCATION PROGRESS BARS -------------------------------------------
+
+function animateProgressBars() {
+  if (prefersReducedMotion()) {
+    // Se reduced motion, mostra barras diretamente no width inline
+    document.querySelectorAll('.progress').forEach((bar) => {
+      bar.style.transition = 'none';
+    });
+    return;
+  }
+
+  document.querySelectorAll('.progress').forEach((bar) => {
+    const targetWidth = bar.style.width || '0%';
+    bar.style.width = '0%';
+
+    ScrollTrigger.create({
+      trigger: bar,
+      start: 'top 90%',
+      onEnter: () => {
+        bar.style.width = targetWidth;
+      },
+      once: true,
+    });
+  });
+}
+
+// --- 7. CUSTOM CURSOR -----------------------------------------------------
+
+function initCustomCursor() {
+  const cursor = document.querySelector('.custom-cursor');
+  const dot = document.querySelector('.custom-cursor-dot');
+  const ring = document.querySelector('.custom-cursor-ring');
+
+  if (!cursor || !dot || !ring) return;
+
+  // Não ativa em dispositivos touch
+  if (window.matchMedia('(hover: none) and (pointer: coarse)').matches) {
+    cursor.style.display = 'none';
+    return;
+  }
+
+  let mouseX = 0, mouseY = 0;
+  let ringX = 0, ringY = 0;
+
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    dot.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
+  });
+
+  // Ring segue com delay suave via requestAnimationFrame
+  function animateRing() {
+    ringX += (mouseX - ringX) * 0.15;
+    ringY += (mouseY - ringY) * 0.15;
+    ring.style.transform = `translate(${ringX}px, ${ringY}px) translate(-50%, -50%)`;
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  // Hover state em elementos interativos
+  const interactiveElements = document.querySelectorAll(
+    'a, button, .project-card, .service-card-link, .constellation-node'
+  );
+
+  interactiveElements.forEach((el) => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('is-hovering'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('is-hovering'));
+  });
+}
+
+// --- 8. MOBILE MENU -------------------------------------------------------
+
+function initMobileMenu() {
+  const menuBtn = document.getElementById('menu-btn');
+  const mobileNav = document.getElementById('mobile-nav');
+  const mobileLinks = document.querySelectorAll('.mobile-link');
+
+  if (!menuBtn || !mobileNav) return;
+
+  let isOpen = false;
+
+  function toggleMenu() {
+    isOpen = !isOpen;
+    mobileNav.classList.toggle('is-active', isOpen);
+    menuBtn.setAttribute('aria-expanded', String(isOpen));
+    menuBtn.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+
+    // Troca ícone
+    const icon = menuBtn.querySelector('i');
+    if (icon) {
+      icon.className = isOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
     }
+
+    // Previne scroll quando menu está aberto
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  }
+
+  menuBtn.addEventListener('click', toggleMenu);
+
+  // Fecha ao clicar em um link
+  mobileLinks.forEach((link) => {
+    link.addEventListener('click', () => {
+      if (isOpen) toggleMenu();
+    });
+  });
+
+  // Fecha com Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && isOpen) toggleMenu();
+  });
+
+  // Animação stagger dos links mobile ao abrir
+  if (!prefersReducedMotion()) {
+    const observer = new MutationObserver(() => {
+      if (mobileNav.classList.contains('is-active')) {
+        gsap.from(mobileLinks, {
+          opacity: 0,
+          y: 30,
+          stagger: 0.08,
+          duration: 0.5,
+          ease: 'power3.out',
+          overwrite: true,
+        });
+      }
+    });
+    observer.observe(mobileNav, { attributes: true, attributeFilter: ['class'] });
+  }
+}
+
+// --- 9. SCROLL PROGRESS BAR -----------------------------------------------
+
+function initScrollProgress() {
+  const progressBar = document.querySelector('.scroll-progress');
+  if (!progressBar) return;
+
+  if (prefersReducedMotion()) {
+    progressBar.style.display = 'none';
+    return;
+  }
+
+  gsap.to(progressBar, {
+    width: '100%',
+    ease: 'none',
+    scrollTrigger: {
+      trigger: document.body,
+      start: 'top top',
+      end: 'bottom bottom',
+      scrub: 0.3,
+    },
+  });
+}
+
+// --- 10. CONSTELLATION LINES (SKILLS) -------------------------------------
+
+function drawConstellationLines() {
+  const svg = document.querySelector('.constellation-lines');
+  const edgeLayer = svg?.querySelector('.constellation-edge-layer');
+  const nodes = document.querySelectorAll('.constellation-node');
+
+  if (!svg || !edgeLayer || nodes.length < 2) return;
+
+  // Limpa linhas anteriores
+  edgeLayer.innerHTML = '';
+
+  const container = document.querySelector('.skills-constellation');
+  if (!container) return;
+
+  const rect = container.getBoundingClientRect();
+  const positions = [];
+
+  nodes.forEach((node) => {
+    const x = parseFloat(node.style.getPropertyValue('--x'));
+    const y = parseFloat(node.style.getPropertyValue('--y'));
+    positions.push({
+      x: (x / 100) * rect.width,
+      y: (y / 100) * rect.height,
+    });
+  });
+
+  // Conecta nós próximos (distância < threshold)
+  const threshold = rect.width * 0.18;
+
+  for (let i = 0; i < positions.length; i++) {
+    for (let j = i + 1; j < positions.length; j++) {
+      const dx = positions[i].x - positions[j].x;
+      const dy = positions[i].y - positions[j].y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+
+      if (dist < threshold) {
+        const opacity = 1 - dist / threshold;
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', positions[i].x);
+        line.setAttribute('y1', positions[i].y);
+        line.setAttribute('x2', positions[j].x);
+        line.setAttribute('y2', positions[j].y);
+        line.setAttribute('stroke', '#00ff88');
+        line.setAttribute('stroke-width', '0.5');
+        line.setAttribute('opacity', (opacity * 0.2).toFixed(3));
+        edgeLayer.appendChild(line);
+      }
+    }
+  }
+}
+
+// --- 11. CITY RAIN CANVAS (BACKGROUND) ------------------------------------
+
+function initCityRain() {
+  const canvas = document.querySelector('.city-rain');
+  if (!canvas || prefersReducedMotion()) return;
+
+  const ctx = canvas.getContext('2d');
+  let width, height;
+  const drops = [];
+  const dropCount = 80;
+
+  function resize() {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+  }
+
+  function createDrops() {
+    drops.length = 0;
+    for (let i = 0; i < dropCount; i++) {
+      drops.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        speed: 2 + Math.random() * 4,
+        length: 10 + Math.random() * 20,
+        opacity: 0.1 + Math.random() * 0.2,
+      });
+    }
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, width, height);
+    ctx.strokeStyle = '#00ff88';
+    ctx.lineWidth = 0.5;
+
+    drops.forEach((drop) => {
+      ctx.globalAlpha = drop.opacity;
+      ctx.beginPath();
+      ctx.moveTo(drop.x, drop.y);
+      ctx.lineTo(drop.x, drop.y + drop.length);
+      ctx.stroke();
+
+      drop.y += drop.speed;
+      if (drop.y > height) {
+        drop.y = -drop.length;
+        drop.x = Math.random() * width;
+      }
+    });
+
+    requestAnimationFrame(animate);
+  }
+
+  resize();
+  createDrops();
+  animate();
+
+  window.addEventListener('resize', debounce(() => {
+    resize();
+    createDrops();
+  }, 200));
+}
+
+// --- 12. INITIALIZATION ---------------------------------------------------
+
+document.addEventListener('DOMContentLoaded', () => {
+  initLenis();
+  initGSAP();
+  animateHero();
+  animateSections();
+  animateProgressBars();
+  initCustomCursor();
+  initMobileMenu();
+  initScrollProgress();
+  initCityRain();
+
+  // Constellation lines desenhadas após layout estabilizar
+  requestAnimationFrame(() => {
+    drawConstellationLines();
+  });
+
+  // Redesenha constellation no resize
+  window.addEventListener('resize', debounce(drawConstellationLines, 250));
 });
 
-document.addEventListener("DOMContentLoaded", function() {
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const heroCopy = document.querySelector(".hero-copy");
-    heroCopy?.classList.add("hero-spotlight");
+// --- 13. CLEANUP (para SPAs futuras ou hot reload) ------------------------
 
-    const revealTargets = Array.from(document.querySelectorAll(
-            "#sobre .hero-copy > *, #sobre .hero-portrait-card, " +
-            "main > section:not(#sobre) .container > *, " +
-            "#projetos .project-card, #formacao .education-card, " +
-            "#servicos .service-card"
-    ));
-
-    const revealGroups = document.querySelectorAll(
-        ".hero-copy, .projects-grid, .education-grid, .services-grid"
-    );
-    revealGroups.forEach(group => {
-        Array.from(group.children).forEach((element, index) => {
-            element.style.setProperty("--reveal-delay", `${(index % 4) * 115}ms`);
-        });
-    });
-
-    revealTargets.forEach(element => {
-        element.dataset.reveal = "up";
-        if (!element.style.getPropertyValue("--reveal-delay")) {
-            element.style.setProperty("--reveal-delay", "0ms");
-        }
-    });
-
-    if (revealTargets.length) {
-        document.body.classList.add("reveal-ready");
-        if ("IntersectionObserver" in window) {
-            const revealObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (!entry.isIntersecting) return;
-                    entry.target.classList.add("is-revealed");
-                    observer.unobserve(entry.target);
-                });
-            }, { threshold: 0.08, rootMargin: "0px 0px -32px 0px" });
-
-            revealTargets.forEach(element => revealObserver.observe(element));
-            window.requestAnimationFrame(() => {
-                revealTargets.forEach(element => {
-                    if (element.getBoundingClientRect().top < window.innerHeight * 0.92) {
-                        element.classList.add("is-revealed");
-                    }
-                });
-            });
-        } else {
-            revealTargets.forEach(element => element.classList.add("is-revealed"));
-        }
-    }
-
-    const cursor = document.querySelector(".custom-cursor");
-    const canUseCustomCursor = window.matchMedia(
-        "(hover: hover) and (pointer: fine) and (min-width: 769px)"
-    );
-
-    if (cursor && canUseCustomCursor.matches) {
-        document.body.classList.add("custom-cursor-enabled");
-        const pointerPosition = { x: -100, y: -100 };
-        const cursorPosition = { x: -100, y: -100 };
-        let cursorFrame = 0;
-
-        const renderCursor = () => {
-            cursorPosition.x += (pointerPosition.x - cursorPosition.x) * 0.22;
-            cursorPosition.y += (pointerPosition.y - cursorPosition.y) * 0.22;
-            cursor.style.setProperty("--cursor-x", `${cursorPosition.x}px`);
-            cursor.style.setProperty("--cursor-y", `${cursorPosition.y}px`);
-
-            if (Math.abs(pointerPosition.x - cursorPosition.x) > 0.15
-                || Math.abs(pointerPosition.y - cursorPosition.y) > 0.15) {
-                cursorFrame = window.requestAnimationFrame(renderCursor);
-            } else {
-                cursorFrame = 0;
-            }
-        };
-
-        document.addEventListener("pointermove", event => {
-            if (event.pointerType === "touch") return;
-            pointerPosition.x = event.clientX;
-            pointerPosition.y = event.clientY;
-            cursor.classList.add("is-visible");
-            cursor.classList.toggle(
-                "is-hovering",
-                event.target instanceof Element
-                    && Boolean(event.target.closest("a, button, .constellation-node"))
-            );
-            if (!cursorFrame) cursorFrame = window.requestAnimationFrame(renderCursor);
-        });
-
-        document.addEventListener("pointerout", event => {
-            if (!event.relatedTarget) cursor.classList.remove("is-visible", "is-hovering");
-        });
-
-        document.addEventListener("pointerdown", () => {
-            cursor.classList.add("is-pressed");
-        });
-
-        document.addEventListener("pointerup", () => {
-            cursor.classList.remove("is-pressed");
-        });
-
-        document.querySelectorAll(".cta-button, .header-cta, .contact-button").forEach(button => {
-            button.classList.add("magnetic-button");
-            button.addEventListener("pointermove", event => {
-                const bounds = button.getBoundingClientRect();
-                const x = event.clientX - bounds.left - bounds.width / 2;
-                const y = event.clientY - bounds.top - bounds.height / 2;
-                button.style.setProperty("--magnetic-x", `${x * 0.16}px`);
-                button.style.setProperty("--magnetic-y", `${y * 0.2}px`);
-            });
-            button.addEventListener("pointerleave", () => {
-                button.style.setProperty("--magnetic-x", "0px");
-                button.style.setProperty("--magnetic-y", "0px");
-            });
-        });
-
-        document.querySelectorAll(".project-card").forEach(card => {
-            card.addEventListener("pointermove", event => {
-                const bounds = card.getBoundingClientRect();
-                const x = event.clientX - bounds.left;
-                const y = event.clientY - bounds.top;
-                const rotateY = ((x / bounds.width) - 0.5) * 7;
-                const rotateX = (0.5 - (y / bounds.height)) * 7;
-                card.style.setProperty("--card-x", `${(x / bounds.width) * 100}%`);
-                card.style.setProperty("--card-y", `${(y / bounds.height) * 100}%`);
-                card.style.setProperty("--card-rotate-x", `${rotateX.toFixed(2)}deg`);
-                card.style.setProperty("--card-rotate-y", `${rotateY.toFixed(2)}deg`);
-            });
-            card.addEventListener("pointerleave", () => {
-                card.style.setProperty("--card-rotate-x", "0deg");
-                card.style.setProperty("--card-rotate-y", "0deg");
-                card.style.setProperty("--card-x", "50%");
-                card.style.setProperty("--card-y", "50%");
-            });
-        });
-
-        heroCopy?.addEventListener("pointermove", event => {
-            const bounds = heroCopy.getBoundingClientRect();
-            heroCopy.style.setProperty("--spot-x", `${event.clientX - bounds.left}px`);
-            heroCopy.style.setProperty("--spot-y", `${event.clientY - bounds.top}px`);
-        });
-    }
-
-    const scrollProgress = document.querySelector(".scroll-progress");
-    if (scrollProgress) {
-        let progressFrame = 0;
-        const updateScrollProgress = () => {
-            const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
-            const progress = scrollableHeight > 0 ? window.scrollY / scrollableHeight : 0;
-            scrollProgress.style.transform = `scaleX(${progress})`;
-            document.querySelector("#sobre")?.style.setProperty(
-                "--skyline-shift",
-                `${Math.min(window.scrollY * 0.12, 72)}px`
-            );
-            progressFrame = 0;
-        };
-
-        window.addEventListener("scroll", () => {
-            if (!progressFrame) progressFrame = window.requestAnimationFrame(updateScrollProgress);
-        }, { passive: true });
-        updateScrollProgress();
-    }
-
-    const rainCanvas = document.querySelector(".city-rain");
-    const rainContext = rainCanvas?.getContext("2d");
-    if (rainCanvas && rainContext) {
-        const rain = [];
-        let canvasWidth = 0;
-        let canvasHeight = 0;
-        let rainFrame = 0;
-        let previousFrameTime = 0;
-        const rainCount = prefersReducedMotion.matches ? 18 : 54;
-
-        const resizeRain = () => {
-            const pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
-            canvasWidth = window.innerWidth;
-            canvasHeight = window.innerHeight;
-            rainCanvas.width = Math.round(canvasWidth * pixelRatio);
-            rainCanvas.height = Math.round(canvasHeight * pixelRatio);
-            rainCanvas.style.width = `${canvasWidth}px`;
-            rainCanvas.style.height = `${canvasHeight}px`;
-            rainContext.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-            rain.length = 0;
-
-            for (let index = 0; index < rainCount; index++) {
-                rain.push({
-                    x: Math.random() * canvasWidth,
-                    y: Math.random() * canvasHeight,
-                    length: 10 + Math.random() * 30,
-                    speed: 45 + Math.random() * 115,
-                    drift: 12 + Math.random() * 28,
-                    opacity: 0.08 + Math.random() * 0.22,
-                    gold: Math.random() > 0.82
-                });
-            }
-        };
-
-        const drawRain = timestamp => {
-            rainFrame = 0;
-            if (document.hidden) return;
-            const delta = previousFrameTime ? Math.min((timestamp - previousFrameTime) / 1000, 0.04) : 0;
-            previousFrameTime = timestamp;
-            rainContext.clearRect(0, 0, canvasWidth, canvasHeight);
-            rain.forEach(drop => {
-                drop.y += drop.speed * delta;
-                drop.x -= drop.drift * delta;
-                if (drop.y - drop.length > canvasHeight || drop.x < -10) {
-                    drop.y = -drop.length - Math.random() * canvasHeight * 0.2;
-                    drop.x = Math.random() * (canvasWidth + 40);
-                }
-                rainContext.beginPath();
-                rainContext.moveTo(drop.x, drop.y);
-                rainContext.lineTo(drop.x - drop.drift * 0.12, drop.y + drop.length);
-                rainContext.strokeStyle = drop.gold
-                    ? `rgba(242, 193, 78, ${drop.opacity})`
-                    : `rgba(142, 175, 217, ${drop.opacity})`;
-                rainContext.lineWidth = drop.gold ? 1 : 0.7;
-                rainContext.stroke();
-            });
-            rainFrame = window.requestAnimationFrame(drawRain);
-        };
-
-        const startRain = () => {
-            if (!document.hidden && !rainFrame) {
-                previousFrameTime = 0;
-                rainFrame = window.requestAnimationFrame(drawRain);
-            }
-        };
-
-        resizeRain();
-        startRain();
-        window.addEventListener("resize", resizeRain, { passive: true });
-        document.addEventListener("visibilitychange", () => {
-            if (document.hidden && rainFrame) {
-                window.cancelAnimationFrame(rainFrame);
-                rainFrame = 0;
-            } else {
-                startRain();
-            }
-        });
-    }
-
-    const constellation = document.querySelector(".skills-constellation");
-    const svg = constellation?.querySelector(".constellation-lines");
-    const edgeLayer = svg?.querySelector(".constellation-edge-layer");
-    const particleLayer = svg?.querySelector(".constellation-particle-layer");
-    const nodeElements = Array.from(constellation?.querySelectorAll(".constellation-node") || []);
-
-    const supportsConstellationInteraction = window.matchMedia("(min-width: 769px) and (hover: hover) and (pointer: fine)").matches;
-
-    if (constellation && svg && edgeLayer && particleLayer && nodeElements.length
-        && supportsConstellationInteraction) {
-        const svgNamespace = "http://www.w3.org/2000/svg";
-        const nodes = nodeElements.map((element, index) => ({
-            element,
-            index,
-            x: parseFloat(element.style.getPropertyValue("--x")) * 10,
-            y: parseFloat(element.style.getPropertyValue("--y")) * 5.2,
-            offsetX: 0,
-            offsetY: 0,
-            velocityX: 0,
-            velocityY: 0,
-            influence: 0
-        }));
-        const edges = [];
-        const connectedPairs = new Set();
-        const particles = [];
-        const pointer = { x: 0, y: 0, active: false };
-        let frameId = 0;
-        let animationStart = 0;
-        let isVisible = true;
-
-        nodes.forEach((node, index) => {
-            const nearestNodes = nodes
-                .filter(candidate => candidate !== node)
-                .map(candidate => ({
-                    candidate,
-                    distance: Math.hypot(candidate.x - node.x, candidate.y - node.y)
-                }))
-                .sort((first, second) => first.distance - second.distance)
-                .slice(0, 2);
-
-            nearestNodes.forEach(({ candidate }) => {
-                const startIndex = Math.min(index, candidate.index);
-                const endIndex = Math.max(index, candidate.index);
-                const key = `${startIndex}-${endIndex}`;
-
-                if (!connectedPairs.has(key)) {
-                    connectedPairs.add(key);
-                    const path = document.createElementNS(svgNamespace, "path");
-                    edgeLayer.appendChild(path);
-                    edges.push({ start: nodes[startIndex], end: nodes[endIndex], path });
-                }
-            });
-        });
-
-        const particleEdges = edges.slice(0, 10);
-        particleEdges.forEach((edge, index) => {
-            const particle = document.createElementNS(svgNamespace, "circle");
-            particle.setAttribute("r", index % 3 === 0 ? "2.3" : "1.7");
-            particleLayer.appendChild(particle);
-            particles.push({ edge, element: particle, phase: index / particleEdges.length });
-        });
-
-        const distanceToSegment = (pointX, pointY, start, end) => {
-            const deltaX = end.x - start.x;
-            const deltaY = end.y - start.y;
-            const lengthSquared = deltaX * deltaX + deltaY * deltaY;
-            const projection = lengthSquared
-                ? Math.max(0, Math.min(1, ((pointX - start.x) * deltaX + (pointY - start.y) * deltaY) / lengthSquared))
-                : 0;
-            return Math.hypot(pointX - (start.x + projection * deltaX), pointY - (start.y + projection * deltaY));
-        };
-
-        const render = timestamp => {
-            frameId = 0;
-            if (!isVisible) return;
-
-            if (!animationStart) animationStart = timestamp;
-            const elapsed = timestamp - animationStart;
-            const bounds = constellation.getBoundingClientRect();
-            const pointerX = (pointer.x / bounds.width) * 1000;
-            const pointerY = (pointer.y / bounds.height) * 520;
-            const influenceRadius = 165;
-            let hasMotion = false;
-
-            nodes.forEach(node => {
-                const baseX = parseFloat(node.element.style.getPropertyValue("--x")) * 10;
-                const baseY = parseFloat(node.element.style.getPropertyValue("--y")) * 5.2;
-                const currentX = baseX + node.offsetX;
-                const currentY = baseY + node.offsetY;
-                const deltaX = currentX - pointerX;
-                const deltaY = currentY - pointerY;
-                const distance = Math.hypot(deltaX, deltaY);
-                const falloff = pointer.active && distance < influenceRadius
-                    ? Math.pow(1 - distance / influenceRadius, 2)
-                    : 0;
-                const repel = distance ? (falloff * 24) / distance : 0;
-                const targetX = pointer.active ? deltaX * repel : 0;
-                const targetY = pointer.active ? deltaY * repel : 0;
-
-                node.velocityX = (node.velocityX + (targetX - node.offsetX) * 0.12) * 0.78;
-                node.velocityY = (node.velocityY + (targetY - node.offsetY) * 0.12) * 0.78;
-                node.offsetX += node.velocityX;
-                node.offsetY += node.velocityY;
-                node.x = baseX + node.offsetX;
-                node.y = baseY + node.offsetY;
-                node.influence = falloff;
-
-                node.element.style.setProperty("--motion-x", `${(node.offsetX * bounds.width) / 1000}px`);
-                node.element.style.setProperty("--motion-y", `${(node.offsetY * bounds.height) / 520}px`);
-                node.element.style.setProperty("--motion-scale", (1 + falloff * 0.1).toFixed(3));
-                node.element.classList.toggle("is-active", falloff > 0.18);
-
-                if (Math.abs(node.offsetX) + Math.abs(node.offsetY) > 0.08
-                    || Math.abs(node.velocityX) + Math.abs(node.velocityY) > 0.08) {
-                    hasMotion = true;
-                }
-            });
-
-            edges.forEach(({ start, end, path }) => {
-                path.setAttribute("d", `M${start.x} ${start.y} L${end.x} ${end.y}`);
-
-                const edgeDistance = pointer.active
-                    ? distanceToSegment(pointerX, pointerY, start, end)
-                    : Infinity;
-                const edgeInfluence = Math.max(0, 1 - edgeDistance / 95);
-                path.style.strokeOpacity = (0.18 + edgeInfluence * 0.75).toFixed(3);
-                path.style.strokeWidth = (1 + edgeInfluence * 1.5).toFixed(2);
-                path.style.stroke = edgeInfluence > 0.08 ? "#ffdb77" : "";
-                path.style.strokeDasharray = edgeInfluence > 0.08 ? "3 7" : "";
-                path.style.strokeDashoffset = edgeInfluence > 0.08 ? `${-(elapsed * 0.018) % 10}` : "0";
-
-                if (edgeInfluence > 0.08) hasMotion = true;
-            });
-
-            particles.forEach(({ edge, element, phase }) => {
-                const progress = (elapsed * 0.00007 + phase) % 1;
-                const particleX = edge.start.x + (edge.end.x - edge.start.x) * progress;
-                const particleY = edge.start.y + (edge.end.y - edge.start.y) * progress;
-                const distance = pointer.active ? Math.hypot(pointerX - particleX, pointerY - particleY) : Infinity;
-                const opacity = pointer.active ? Math.max(0.08, 1 - distance / 190) : 0;
-
-                element.setAttribute("cx", particleX.toFixed(2));
-                element.setAttribute("cy", particleY.toFixed(2));
-                element.style.opacity = opacity.toFixed(2);
-            });
-
-            if (pointer.active || hasMotion) {
-                frameId = requestAnimationFrame(render);
-            } else {
-                nodes.forEach(node => {
-                    node.element.classList.remove("is-active");
-                    node.element.style.setProperty("--motion-scale", "1");
-                });
-                edges.forEach(({ path }) => {
-                    path.style.strokeOpacity = "0.18";
-                    path.style.strokeWidth = "1";
-                    path.style.stroke = "";
-                    path.style.strokeDasharray = "";
-                    path.style.strokeDashoffset = "0";
-                });
-            }
-        };
-
-        const scheduleRender = () => {
-            if (!frameId && isVisible) frameId = requestAnimationFrame(render);
-        };
-
-        constellation.addEventListener("pointerenter", event => {
-            if (event.pointerType === "touch") return;
-            pointer.active = true;
-            scheduleRender();
-        });
-
-        constellation.addEventListener("pointermove", event => {
-            if (event.pointerType === "touch") return;
-            const bounds = constellation.getBoundingClientRect();
-            pointer.x = event.clientX - bounds.left;
-            pointer.y = event.clientY - bounds.top;
-            pointer.active = true;
-            scheduleRender();
-        });
-
-        constellation.addEventListener("pointerleave", () => {
-            pointer.active = false;
-            scheduleRender();
-        });
-
-        document.addEventListener("visibilitychange", () => {
-            isVisible = !document.hidden;
-            if (!isVisible && frameId) {
-                pointer.active = false;
-                cancelAnimationFrame(frameId);
-                frameId = 0;
-            }
-            if (isVisible) scheduleRender();
-        });
-
-        window.addEventListener("resize", scheduleRender, { passive: true });
-    }
-
-    const visitorBadge = document.querySelector(".visitor-counter img");
-    const badgeSource = visitorBadge?.dataset.src;
-
-    if (badgeSource) {
-        const badgeUrl = new URL(badgeSource);
-        badgeUrl.searchParams.set("cache", Date.now().toString());
-        visitorBadge.src = badgeUrl.toString();
-    }
+window.addEventListener('beforeunload', () => {
+  if (lenis) lenis.destroy();
+  ScrollTrigger.getAll().forEach((st) => st.kill());
 });
